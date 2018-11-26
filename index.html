@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" type="image/png" href="files/icons/r.png" />
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet"> 
+  <link href="style.css" rel="stylesheet"> 
+  </style>
+  
+  <title>
+    Jesse Paris&ndash;Jourdan
+  </title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      const nonsenseTrigger = document.getElementById("nonsense-trigger");
+      nonsenseTrigger.addEventListener("click", function(event) {
+        const elems = document.querySelectorAll(".invisible, .visible");
+        Array.prototype.forEach.call(elems, function(elem){
+          const classes = elem.classList;
+          if (classes.contains("invisible")) {
+            classes.remove("invisible");
+            classes.add("visible");
+          } else {
+            classes.remove("visible");
+            classes.add("invisible");
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>
+    Jesse Paris–Jourdan
+  </h1>
+  <p>
+    <a href="mailto:jesseparisjourdan@gmail.com">jesseparisjourdan@gmail.com</a>
+  </p>
+  <p>
+    Hello! My name is Jesse. I am a &lsquo;writer&rsquo;, &lsquo;editor&rsquo; and &lsquo;web developer&rsquo;. I live in Melbourne. I am currently one of four editors of <a href="http://farragomagazine.com/">Farrago</a>, the student publication at the University of Melbourne. In 2019, I will probably be finishing my undergraduate Bachelor of Arts with a history major.
+  </p>
+  <table>
+    <tbody>
+      <tr class="invisible nonsense">
+        <td>16/10/18</td>
+        <td>
+          <span class="icon microphone"></span> 
+          <a href="blog/20181016-julia.html">
+            julia</a>
+        </td>
+      </tr>
+      <tr class="invisible nonsense">
+        <td>24/ 9/18</td>
+        <td>
+          <span class="icon list"></span> 
+          <a href="blog/20180924-principles.html">
+            principles for javascript</a>
+        </td>
+      </tr>
+      <tr class="invisible nonsense">
+        <td>23/ 9/18</td>
+        <td>
+          <span class="icon eye"></span> 
+          <a href="blog/20180923-future.html">
+            staring into my future</a>
+        </td>
+      </tr>
+      <tr style="display: none;" class="invisible nonsense">
+        <td>11/ 9/18</td>
+        <td> 
+          <a href="not yet">
+            celestial bodies</a>
+            <span class="icon mobile"></span> 
+            web dev
+        </td>
+      </tr>
+      <tr class="invisible nonsense">
+        <td>13/ 8/18</td>
+        <td>
+          <a href="http://farragomagazine.com/2018/08/13/flystrike/">
+            flytstrike</a>
+          <span class="icon mobile"></span> 
+            web dev
+        </td>
+      </tr>
+      <tr>
+        <td>8/ 6/18</td>
+        <td>
+          <a href="http://farragomagazine.com/2018/06/08/sirens/">
+            sirens</a> 
+          <span class="icon mobile"></span> 
+            web dev
+        </td>
+      </tr>
+      <tr>
+        <td>10/12/17</td>
+        <td>
+          <a href="http://farragomagazine.com/2017/12/10/natcon-vis/">
+            natcon by the numbers</a> 
+          <span class="icon viz"></span> 
+            data viz
+        </td>
+      </tr>
+      <tr>
+        <td>1/10/17</td>
+        <td>
+          <a href="/files/shit-city.pdf">
+            shit city [pdf]</a> 
+          <span class="icon pencil"></span> 
+            nonfiction
+        </td>
+      </tr>
+      <tr class="invisible nonsense">
+        <td>29/ 8/16</td>
+        <td>
+          <a href="http://farragomagazine.com/2016/08/29/beer-not-books/">
+            beer not books</a> 
+          <span class="icon pencil"></span>
+            nonfiction
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    <a id="nonsense-trigger" href="#">
+      <span class="visible">show</span>
+      <span class="invisible">hide</span> 
+      nonsense</a>
+  </p>
+</body>
+</html>
