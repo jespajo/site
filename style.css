@@ -1,43 +1,41 @@
 body {
   font-family: "Inconsolata", monospace;
   max-width: 600px;
-  background: snow; 
-}
+  background: snow; }
+
 table td {
   padding: 0 8px 0 0;
-  vertical-align: top;
-}
+  vertical-align: top; }
 p, table td {
-  font-size: 16px;
-}
+  font-size: 16px; }
 td:first-child {
-  text-align: right;
-}
+  text-align: right; }
+
 span.icon {
   display: inline-block;
   height: 13px;
-  width: 13px; }
+  width: 13px;
+  background-repeat: no-repeat !important; }
 span.icon.list { background: url(files/icons/list.svg); }
 span.icon.eye { background: url(files/icons/eye.svg); }
 span.icon.microphone { background: url(files/icons/microphone.svg); }
 span.icon.mobile { background: url(files/icons/mobile.svg); }
 span.icon.pencil { background: url(files/icons/pencil.svg); }
 span.icon.shower { background: url(files/icons/shower.svg); }
-span.icon.viz { background: url(files/icons/viz.svg);
-}
+span.icon.viz { background: url(files/icons/viz.svg); }
+
 tr.invisible.nonsense,
 a#nonsense-trigger span.invisible {
-  display: none;
-}
+  display: none; }
+
 .videoWrapper {
-	position: relative;
-	padding-bottom: 56.25%; /* 16:9 */
-	padding-top: 25px;
-	height: 0; }
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0; }
 .videoWrapper iframe {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
