@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<!--
+the aim:
+an image viewer
+starts with full image taking up 300x300 pixels
+click on part to zoom in
+zoom in is based on that part being the center within reason
+(never see outside image)
+right click to zoom out
+at least three zoom levels
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+<link href="../style.css" rel="stylesheet">
+<title>image viewer</title>
+<style>
+  * { box-sizing: border-box;
+    font-family: "Inconsolata", monospace; }
+  canvas { border: 1px solid black; }
+  #form {
+    width: 300px;
+    display: flex; }
+  input {
+    flex-grow: 1; }
+</style>
+<script>
+
+let ctx;
+const clearCtx = function(){
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, 300, 300); }
+
+const imgInit = function() {
+  const form = document.getElementById("form");
+  const input = document.getElementById("input");
+  input.value = input.value || "https://i.redd.it/lfndtoirttvx.jpg";
+  clearCtx();
+  const img = new Image();
+  img.src = input.value;
+  img.onload = function() {
+    const width = this.naturalWidth;
+    const height = this.naturalHeight;
+    const max = Math.max(width, height);
+    const scale = 300 / max;
+    ctx.scale(scale, scale);
+    let x = 0, y = 0;
+    if (max === width) {
+      y = (max - height) / 2; }
+    else {
+      x = (max - width) / 2; };
+    ctx.translate(x, y);
+    ctx.drawImage(this, 0, 0, width, height);
+
+    console.log(scale); };
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  const canvas = document.getElementsByTagName("canvas")[0];
+  ctx = canvas.getContext('2d');
+  const button = document.getElementsByTagName("button")[0];
+  button.addEventListener("click", imgInit);
+  canvas.addEventListener("click", function(event){
+    console.log(event);
+  });
+  imgInit();
+});
+
+</script>
+</head>
+<body>
+<p><a href="../">home</a> / image viewer</p>
+<p><canvas width="300" height="300"></canvas></p>
+<p style="margin-bottom: 5px;">use another image:</p>
+<div id="form">
+<input id="input">
+<button>go</button>
+</div>
+<!--
+portrait image url:
+http://www.mobileswall.com/wp-content/uploads/2015/10/640-kot-vzglyad-lapa-sidit-fon-l.jpg
+-->
+</body>
+</html>
