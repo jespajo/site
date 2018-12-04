@@ -1,5 +1,7 @@
-body {
+* {
   font-family: "Inconsolata", monospace;
+  box-sizing: border-box; }
+body {
   max-width: 600px;
   background: snow; }
 
@@ -16,10 +18,11 @@ span.icon {
   height: 13px;
   width: 13px;
   background-repeat: no-repeat !important; }
-span.icon.list { background: url(files/icons/list.svg); }
+span.icon.basketball { background: url(files/icons/basketball.svg); }
 span.icon.eye { background: url(files/icons/eye.svg); }
 span.icon.finger-up { background: url(files/icons/finger-up.svg); }
 span.icon.image { background: url(files/icons/image.svg); }
+span.icon.list { background: url(files/icons/list.svg); }
 span.icon.microphone { background: url(files/icons/microphone.svg); }
 span.icon.mobile { background: url(files/icons/mobile.svg); }
 span.icon.pencil { background: url(files/icons/pencil.svg); }
