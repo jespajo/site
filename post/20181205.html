@@ -14,11 +14,11 @@ canvas {
 <script>
 let canvas, ctx;
 let circles = [];
-const src = note => "src/20181205/" + note + ".wav";
+const src = note => "src/20181205/" + note + ".mp3";
 const notes = [
-{ x: 50, y: 50,
-  url: src("e") },
 { x: 250, y: 250,
+  url: src("e") },
+{ x: 50, y: 50,
   url: src("b") } ];
 let e = new Audio(notes[0].url);
 let b = new Audio(notes[1].url);
@@ -39,10 +39,16 @@ function step() {
       return Math.hypot(x, y); };
     const touchE = c.r - 5 < short(0) && c.r + 5 > short(0);
     const touchB = c.r - 5 < short(1) && c.r + 5 > short(1);
-    if (touchE) { ctx.strokeStyle = "blue";
-      e.play(); e = new Audio(notes[0].url); }
-    else if (touchB) { ctx.strokeStyle = "red";
-      b.play(); b = new Audio(notes[1].url); }
+    if (touchE) {
+      ctx.strokeStyle = "blue";
+      if (c.touchedE === false) {
+        e.play(); e = new Audio(notes[0].url);
+        c.touchedE = true; } }
+    else if (touchB) {
+      ctx.strokeStyle = "red";
+      if (c.touchedB === false) {
+        b.play(); b = new Audio(notes[1].url);
+        c.touchedB = true; } }
     else { ctx.strokeStyle = "black"; };
     ctx.stroke();
     ctx.closePath(); }
@@ -56,7 +62,9 @@ document.addEventListener("DOMContentLoaded", function() {
     circle = {
       x: event.clientX - canvasBox.left - 1,
       y: event.clientY - canvasBox.top - 1,
-      t: Date.now() };
+      t: Date.now(),
+      touchedE: false,
+      touchedB: false };
     circles.push(circle); });
   window.requestAnimationFrame(step); });
 </script>
