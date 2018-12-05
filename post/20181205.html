@@ -14,14 +14,14 @@ canvas {
 <script>
 let canvas, ctx;
 let circles = [];
-const src = note => "src/20181205/" + note + ".mp3";
+const src = note => "src/20181205/" + note + ".wav";
 const notes = [
 { x: 50, y: 50,
   url: src("e") },
 { x: 250, y: 250,
   url: src("b") } ];
-const e = new Audio(notes[0].url);
-const b = new Audio(notes[1].url);
+let e = new Audio(notes[0].url);
+let b = new Audio(notes[1].url);
 function step() {
   ctx.clearRect(0, 0, 300, 300);
   for (let n of notes) {
@@ -39,8 +39,10 @@ function step() {
       return Math.hypot(x, y); };
     const touchE = c.r - 5 < short(0) && c.r + 5 > short(0);
     const touchB = c.r - 5 < short(1) && c.r + 5 > short(1);
-    if (touchE) { ctx.strokeStyle = "blue"; e.play(); }
-    else if (touchB) { ctx.strokeStyle = "red"; b.play(); }
+    if (touchE) { ctx.strokeStyle = "blue";
+      e.play(); e = new Audio(notes[0].url); }
+    else if (touchB) { ctx.strokeStyle = "red";
+      b.play(); b = new Audio(notes[1].url); }
     else { ctx.strokeStyle = "black"; };
     ctx.stroke();
     ctx.closePath(); }
