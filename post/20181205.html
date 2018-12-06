@@ -50,6 +50,7 @@ function step() {
         b.play(); b = new Audio(notes[1].url);
         c.touchedB = true; } }
     else { ctx.strokeStyle = "black"; };
+    console.log(c.touchedE, c.touchedB);
     ctx.stroke();
     ctx.closePath(); }
   circles = circles.filter(c => c.r < 425);
