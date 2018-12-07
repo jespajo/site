@@ -105,6 +105,61 @@
                     data.data[index] = Math.min(f * 2, 255); } }; };
               ctx.putImageData(data, 0, 0);
               break;
+            case "level":
+              // conways game of life
+              // first need to make every pixel black or white
+              if (f === 1) {
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    let pixel = data.data.slice(index, index + 4);
+                    let white = true;
+                    for (let i = 0; i < pixel.length; i++) {
+                      if (pixel[i] !== 0) {
+                        white = false; }; };
+                    if (!white) {
+                      for (let i = 0; i < pixel.length - 1; i++) {
+                        pixel[i] = 0; };
+                      pixel[3] = 255; };
+                    for (let i = 0; i < pixel.length; i++) {
+                      data.data[index + i] = pixel[i]; }; }; }; }
+              // then do conway calculations
+              else if (f % 4 == 0) {
+                let conway = [];
+                for (let y = 0; y < height; y++) {
+                  let row = [];
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    const black = data.data[index + 3] === 255;
+                    row.push(black ? 1 : 0); };
+                  conway.push(row); };
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    let alive = data.data[index + 3] === 255;
+                    // calc neighbours alve
+                    let neighbours = 0;
+                    const range = [-1, 0, +1];
+                    for (let i = 0; i < range.length; i++) {
+                      for (let j = 0; j < range.length; j++) {
+                        const k = range[i];
+                        const l = range[j];
+                        if (!(k == 0 && l == 0)) {
+                          try { neighbours += conway[y + k][x + l]; }
+                          catch (err) {}; }; }; };
+                    if (alive) {
+                      // rules 1 and 3
+                      if (neighbours < 2 || neighbours > 3) {
+                        alive = false; }; }
+                    // rule 4
+                    else if (neighbours == 3) {
+                      alive = true; };
+                    if (alive) {
+                      data.data[index + 3] = 255; }
+                    else {
+                      data.data[index + 3] = 0; }; }; }; };
+              ctx.putImageData(data, 0, 0);
+              break;
             case ".":
               for (let i = 0; i < data.data.length; i++) {
                 const r = Math.random() * f;
@@ -139,7 +194,7 @@
         <p>Of being in a hurry gone. We ran</p>
         <p>Behind the backs of houses, crossed a street</p>
         <p>Of blinding windscreens, smelt the fish-dock; thence</p>
-        <p>The river&rsquo;s level drifting breadth began,</p>
+        <p>The river&rsquo;s <span>level</span> drifting breadth began,</p>
         <p>Where sky and Lincolnshire and water meet<span>.</span></p>
       </div>
       <div id="crumbs">
