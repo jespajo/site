@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+    <title>whitsun</title>
+    <style>
+      * {
+        overflow: hidden;
+        margin: 0; padding: 0;
+        font-family: monospace;
+        font-size: 16px; }
+      div#container {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0; }
+      a, span {
+        cursor: pointer;
+        text-decoration: underline;
+        color: #0000ee; }
+      div#crumbs, div#poem {
+        position: absolute;
+        padding: 0 8px 0 8px; }
+      div#crumbs {
+        left: 0; top: 16px; }
+      div#poem {
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content; }
+      div#poem p.indented {
+        margin-left: 19.28px; }
+    </style>
+    <script>
+
+      let container, html;
+      let canvas, ctx;
+      let width, height;
+      let img;
+      let f = 0;
+      let data;
+
+      const createCanvas = function() {
+        // find width and height
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        // create svg from DOM
+        const parsed = new DOMParser().parseFromString(html, "text/xml");
+        const rules = document.styleSheets[0].cssRules;
+        for (let r of rules) {
+          const elements = parsed.querySelectorAll(r.selectorText);
+          for (let e of elements) {
+            for (let i = 0; i < r.style.length; i++) {
+              e.style[r.style[i]] = r.style[r.style[i]]; } } };
+        const styled = parsed.getElementById('container').outerHTML;
+        const svg = "data:image/svg+xml," +
+          "<svg xmlns='http://www.w3.org/2000/svg' width='" + width + "' height='" + height + "'>" +
+            "<foreignObject width='100%' height='100%'>" +
+              styled +
+            "</foreignObject>" +
+          "</svg>";
+        img = new Image();
+        img.src = svg;
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, width, height);
+          data = ctx.getImageData(0, 0, width, height);
+          console.log("canvas ready to go!"); }; }
+
+      const init = function() {
+        // get DOM objects
+        container = document.getElementById("container");
+        html = container.outerHTML;
+        // create canvas obj in background
+        canvas = document.createElement("canvas");
+        ctx = canvas.getContext("2d");
+        createCanvas();
+        addEventListeners(); };
+
+      const toCanvas = function() {
+        container.innerHTML = "";
+        container.appendChild(canvas); };
+
+      const toHTML = function() {
+        location.reload(); };
+
+  /*  const getChannelsForPixel = function(x, y) {
+        const index = (y * width + x) * 4;
+        const r = data.data[index];
+        const g = data.data[index + 1];
+        const b = data.data[index + 2];
+        const a = data.data[index + 3];
+        return [r, g, b, a]; };    */
+
+      const index = (x, y) => (y * width + x) * 4;
+
+      const animate = function(word, event) {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        return function() {
+          f++;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, width, height);
+          switch(word) {
+            case ".":
+              let mX = mouseX; let mY = mouseY;
+              canvas.addEventListener("mouseover", function(event) {
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    hypot = Math.hypot(x - event.clientX, y - event.clientY);
+                    if (hypot < 50) {
+                      const index = (y * width + x) * 4;
+                      for (let i = index; i < index + 4; i++) {
+                        data.data[i] = data.data[i] + Math.random() * 30 - 15; }
+                    }
+                  };
+                };
+              });
+              ctx.putImageData(data, 0, 0);
+              break;
+            case "away":
+              ctx.putImageData(data, f, f);
+              break;
+            case "hot":
+              for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                  hypot = Math.hypot(x - mouseX, y - mouseY);
+                  if (hypot < f * 2) {
+                    const index = (y * width + x) * 4;
+                    data.data[index] = Math.min(f * 2, 255);
+                  }
+                };
+              };
+              ctx.putImageData(data, 0, 0);
+              break;
+            default:
+              console.warn("error"); };
+          window.requestAnimationFrame(animate(word, event)); } };
+
+      const addEventListeners = function() {
+        container.addEventListener("contextmenu", function(event) {
+          toHTML();
+          event.preventDefault(); });
+        const spans = container.querySelectorAll("span");
+        spans.forEach(function(span) {
+          const word = span.innerText;
+          span.addEventListener("click", function(event) {
+            toCanvas();
+            window.requestAnimationFrame(animate(word, event)); }); }); };
+
+      document.addEventListener("DOMContentLoaded", init);
+      window.addEventListener("resize", toHTML);
+
+    </script>
+  </head>
+  <body>
+    <div id="container" xmlns="http://www.w3.org/1999/xhtml">
+      <div id="poem">
+        <p>That <span>Whitsun</span>, I was late getting <span>away</span>:</p>
+        <p class="indented">Not till about</p>
+        <p>One-twenty on the sunlit Saturday</p>
+        <p>Did my three-quarters-empty train pull out,</p>
+        <p>All windows down, all cushions <span>hot</span>, all sense</p>
+        <p>Of being in a hurry gone. We ran</p>
+        <p>Behind the backs of houses, crossed a street</p>
+        <p>Of blinding windscreens, smelt the fish-dock; thence</p>
+        <p>The river&rsquo;s level drifting breadth began,</p>
+        <p>Where sky and Lincolnshire and water meet<span>.</span></p>
+      </div>
+      <div id="crumbs">
+        <a href="./../">home</a> / whitsun
+      </div>
+    </div>
+  </body>
+</html>
