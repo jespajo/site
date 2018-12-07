@@ -27,18 +27,18 @@
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
         width: fit-content; }
+      div#poem p {
+        padding-left: 19.28px;
+        text-indent: -19.28px; }
       div#poem p.indented {
-        margin-left: 19.28px; }
+        text-indent: 0; }
     </style>
     <script>
-
       let container, html;
       let canvas, ctx;
       let width, height;
-      let img;
+      let img, data;
       let f = 0;
-      let data;
-
       const createCanvas = function() {
         // find width and height
         width = canvas.width = window.innerWidth;
@@ -64,7 +64,6 @@
           ctx.drawImage(img, 0, 0, width, height);
           data = ctx.getImageData(0, 0, width, height);
           console.log("canvas ready to go!"); }; }
-
       const init = function() {
         // get DOM objects
         container = document.getElementById("container");
@@ -74,24 +73,11 @@
         ctx = canvas.getContext("2d");
         createCanvas();
         addEventListeners(); };
-
       const toCanvas = function() {
         container.innerHTML = "";
         container.appendChild(canvas); };
-
       const toHTML = function() {
         location.reload(); };
-
-  /*  const getChannelsForPixel = function(x, y) {
-        const index = (y * width + x) * 4;
-        const r = data.data[index];
-        const g = data.data[index + 1];
-        const b = data.data[index + 2];
-        const a = data.data[index + 3];
-        return [r, g, b, a]; };    */
-
-      const index = (x, y) => (y * width + x) * 4;
-
       const animate = function(word, event) {
         const mouseX = event.clientX;
         const mouseY = event.clientY;
@@ -100,24 +86,15 @@
           ctx.setTransform(1, 0, 0, 1, 0, 0);
           ctx.clearRect(0, 0, width, height);
           switch(word) {
-            case ".":
-              let mX = mouseX; let mY = mouseY;
-              canvas.addEventListener("mouseover", function(event) {
-                for (let y = 0; y < height; y++) {
-                  for (let x = 0; x < width; x++) {
-                    hypot = Math.hypot(x - event.clientX, y - event.clientY);
-                    if (hypot < 50) {
-                      const index = (y * width + x) * 4;
-                      for (let i = index; i < index + 4; i++) {
-                        data.data[i] = data.data[i] + Math.random() * 30 - 15; }
-                    }
-                  };
-                };
-              });
-              ctx.putImageData(data, 0, 0);
-              break;
             case "away":
-              ctx.putImageData(data, f, f);
+              let newData = data;
+              for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                  const index = (y * width + x) * 4;
+                  for (let i = index; i < index + 4; i++) {
+                    let m = (i - 28 + width * 16) % data.data.length;
+                    newData.data[i] = data.data[m]; }; }; };
+              ctx.putImageData(newData, 0, 0);
               break;
             case "hot":
               for (let y = 0; y < height; y++) {
@@ -125,16 +102,18 @@
                   hypot = Math.hypot(x - mouseX, y - mouseY);
                   if (hypot < f * 2) {
                     const index = (y * width + x) * 4;
-                    data.data[index] = Math.min(f * 2, 255);
-                  }
-                };
-              };
+                    data.data[index] = Math.min(f * 2, 255); } }; };
+              ctx.putImageData(data, 0, 0);
+              break;
+            case ".":
+              for (let i = 0; i < data.data.length; i++) {
+                const r = Math.random() * f;
+                data.data[i] = (data.data[i] + r) & 0xff; }
               ctx.putImageData(data, 0, 0);
               break;
             default:
               console.warn("error"); };
           window.requestAnimationFrame(animate(word, event)); } };
-
       const addEventListeners = function() {
         container.addEventListener("contextmenu", function(event) {
           toHTML();
@@ -145,16 +124,14 @@
           span.addEventListener("click", function(event) {
             toCanvas();
             window.requestAnimationFrame(animate(word, event)); }); }); };
-
       document.addEventListener("DOMContentLoaded", init);
       window.addEventListener("resize", toHTML);
-
     </script>
   </head>
   <body>
     <div id="container" xmlns="http://www.w3.org/1999/xhtml">
       <div id="poem">
-        <p>That <span>Whitsun</span>, I was late getting <span>away</span>:</p>
+        <p>That Whitsun, I was late getting <span>away</span>:</p>
         <p class="indented">Not till about</p>
         <p>One-twenty on the sunlit Saturday</p>
         <p>Did my three-quarters-empty train pull out,</p>
