@@ -12,7 +12,8 @@
   overflow: hidden;
   font-family: monospace; }
 body, #crumbs *, #menu * {
-  margin: 0; }
+  margin: 0;
+  max-width: none; }
 #crumbs p {
   position: absolute;
   left: 8px; top: 16px; }
@@ -28,29 +29,22 @@ canvas {
 </style>
 <!-- Below style is specifically targeted at SVG element -->
 <style>
-  div#page {
-    font-family: monospace;
-    padding-top: 49px;
-    margin-left: 8px; }
-  div#page p, td {
-    font-size: 16px; }
-  div#page a {
-    text-decoration: underline;
-    color: #0000ee; }
-  div#page td:first-child {
-    padding: 0 8px 0 0;
-    text-align: right; }
-  div#page td {
-    padding: 0 8px 0 0;
-    vertical-align: top; }
-  div#page span.icon {
-    display: inline-block;
-    height: 13px; width: 13px;
-    background-repeat: no-repeat !important; }
-  div#page span.icon.viz {
-    background: url(../files/icons/viz.svg); }
-  div#page span.icon.pencil {
-    background: url(../files/icons/pencil.svg); }
+div#page {
+  max-width: 600px;
+  font-family: monospace;
+  padding-top: 49px;
+  margin-left: 8px; }
+div#page p, td {
+  font-size: 16px; }
+div#page a {
+  text-decoration: underline;
+  color: #0000ee; }
+div#page td:first-child {
+  padding: 0 8px 0 0;
+  text-align: right; }
+div#page td {
+  padding: 0 8px 0 0;
+  vertical-align: top; }
 </style>
 <script>
 let width, height;
@@ -150,7 +144,7 @@ const init = function() {
     main.innerHTML = "<canvas>";
     init(); });
   htmlButton.addEventListener("click", function(){
-    main.innerHTML = html; });
+    main.innerHTML = html.replace(/%23/g, "#"); });
   resizeCanvas(); }
 
 document.addEventListener("DOMContentLoaded", init);
