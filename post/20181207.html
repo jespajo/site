@@ -124,7 +124,7 @@
                     for (let i = 0; i < pixel.length; i++) {
                       data.data[index + i] = pixel[i]; }; }; }; };
               // then do conway calculations
-              if (f % 4 == 1) {
+              if (f) {
                 let conway = [];
                 for (let y = 0; y < height; y++) {
                   let row = [];

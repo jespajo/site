@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+    <title>jeff</title>
+    <style>
+      * { font: 16px monospace; }
+      .invisible { display: none; }
+    </style>
+    <script>
+      /* used function below to get time of each word ... result saved as timing
+      document.onkeyup = function(e){
+        if(e.keyCode == 32){
+            timing.push(melba.currentTime); } }*/
+      const timing = [
+        6.374153, 7.325977, 7.745557, 8.331641, 9.213241,
+        10.627303, 11.619721, 11.999776, 12.602347, 14.803157,
+        15.190819, 17.695122, 18.193671, 18.693324, 19.057402,
+        19.612383, 20.47712, 21.016527, 21.857387, 22.228583,
+        22.417628, 23.147814, 23.400909, 23.84429, 24.351465,
+        25.923996, 26.208567, 27.018076, 27.17493, 27.427461,
+        28.578992, 28.934991, 29.481538, 29.981049, 30.329131,
+        31.703134, 32.273837, 32.788776, 33.176383, 34.136974,
+        34.2785, 35.644481, 36.016204, 37.414473, 38.263526,
+        38.444528, 38.617372 ];
+      let melba;
+      document.addEventListener("DOMContentLoaded", function(){
+        melba = new Audio();
+        melba.src = "src/20181208/melba.mp3";
+        let button;
+        melba.addEventListener("loadeddata", function(){
+          button = document.createElement("button");
+          button.innerHTML = "jeff rosenstock &ndash; melba";
+          button.addEventListener("click", function(){
+            melba.play(); });
+          document.getElementById("button").appendChild(button); });
+        const lyrics = document.getElementById("lyrics");
+        let spans = lyrics.querySelectorAll("span");
+        spans.forEach(span => {
+          span.classList.add("invisible"); });
+        let newSpans = [];
+        for (let i = 0; i < spans.length; i++) {
+          const self = spans[i];
+          newSpans.push(self); };
+        melba.ontimeupdate = function() {
+          if (timing[0]) {
+            if (timing[0] < melba.currentTime) {
+              newSpans[0].classList.remove("invisible");
+              timing.shift();
+              newSpans.shift(); }; }; }; });
+    </script>
+  </head>
+  <body>
+    <p><a href="./../">home</a> / jeff</p>
+    <p>I&rsquo;m going to a gig tonight.<br />
+    Jeff Rosenstock is playing at the Reverence Hotel in Footscray.<br />
+    I&rsquo;m going to get baked and dance until I&rsquo;m drenched.</p>
+    <div id="button"></div>
+    <div id="lyrics">
+      <p>
+        <span>After</span> <span>the</span> <span>storm</span> <span>breaks</span><br />
+        <span>Fluorescence</span> <span>radiates</span> <span>off</span><br />
+        <span>Skin</span> <span>overflowing</span> <span>with</span> <span>underexposure</span>
+      </p>
+      <p>
+        <span>This</span> <span>was</span> <span>a</span> <span>shit</span> <span>day</span><br />
+        <span>Can&rsquo;t</span> <span>power</span> <span>through</span> <span>the</span> <span>haze</span><br />
+        <span>I&rsquo;m</span> <span>tired</span> <span>of</span> <span>waiting</span> <span>for</span> <span>it</span> <span>to</span> <span>be</span> <span>over</span>
+      </p>
+      <p>
+        <span>Let&rsquo;s</span> <span>go</span> <span>back</span> <span>to</span> <span>Melbourne</span><br />
+        <span>We</span> <span>can</span> <span>start</span> <span>over</span><br />
+        <span>Because</span> <span>mistakes</span> <span>get</span> <span>forgotten</span><br />
+        <span>Dreams</span> <span>can</span> <span>be</span> <span>remembered</span>
+      </p>
+    </div>
+  </body>
+</html>
