@@ -10,24 +10,26 @@
       .invisible { display: none; }
     </style>
     <script>
-      /* used function below to get time of each word ... result saved as timing
+      /* I used function below to get the time of each word
+         ... result saved as const timing
+      let timing = [];
       document.onkeyup = function(e){
         if(e.keyCode == 32){
-            timing.push(melba.currentTime); } }*/
+            timing.push(melba.currentTime); } }
+      */
       const timing = [
-        6.374153, 7.325977, 7.745557, 8.331641, 9.213241,
-        10.627303, 11.619721, 11.999776, 12.602347, 14.803157,
-        15.190819, 17.695122, 18.193671, 18.693324, 19.057402,
-        19.612383, 20.47712, 21.016527, 21.857387, 22.228583,
-        22.417628, 23.147814, 23.400909, 23.84429, 24.351465,
-        25.923996, 26.208567, 27.018076, 27.17493, 27.427461,
-        28.578992, 28.934991, 29.481538, 29.981049, 30.329131,
-        31.703134, 32.273837, 32.788776, 33.176383, 34.136974,
-        34.2785, 35.644481, 36.016204, 37.414473, 38.263526,
-        38.444528, 38.617372 ];
-      let melba;
+        5.874, 6.826, 7.246, 7.832,
+        8.713, 10.127, 11.12,
+        11.5, 12.102, 14.303, 14.691,
+        17.195, 17.694, 18.193, 18.557, 19.112,
+        19.977, 20.517, 21.357, 21.729, 21.918,
+        22.648, 22.901, 23.344, 23.851, 25.424, 25.709, 26.518, 26.675, 26.927,
+        28.079, 28.435, 28.982, 29.481, 29.829,
+        31.203, 31.774, 32.289, 32.676,
+        33.637, 33.779, 35.144, 35.516,
+        36.914, 37.764, 37.945, 38.117 ];
       document.addEventListener("DOMContentLoaded", function(){
-        melba = new Audio();
+        const melba = new Audio();
         melba.src = "src/20181208/melba.mp3";
         let button;
         melba.addEventListener("loadeddata", function(){
