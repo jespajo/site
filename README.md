@@ -1,16 +1,14 @@
-# My personal internet
+# Hello
 
-The goal for this site is eventually to host it on a node.js web server, with the ability for me to, with a single git push, both 1) create a new post and 2) update the index with a 
-link and description of the post. The idea would also be to build something using vanilla JS that only does what I need it to do and nothing else. No full blog frameworks or anything like that.
+## Current goals for the site
 
-A post could then look something like this:
-
-    {{ > header }}
-      <title>An example post</title>
-
-      <meta name="date" content="2018-12-01T01:00:00+1100">
-      <meta name="info" content="[icon] [julia]">
-    </head>
-    <body>
-      <!-- Main content of the post would go here -->
-    {{ > footer }}
+1. create a web server and serve your website dynamically. for each web feature you should only need to push the html code and the `./d` page will update with all of the titles and links.
+- `./d/20181212.html` -> `./d/20181212`
+- pushing a post to master (or heroku) should update the database
+- the database (`./d/index.json` ?) needs to include only:
+  - date (auto created on first push to master based on `Date.now()`, does not change in subsequent pushes)
+  - location of html file
+  - title
+  (because that's all that will display in the on `./d`)
+2. reconfigure the home page so it's more of an intro with a link to `/d`
+3. long term: each page can also include @header stuff and it will auto load
