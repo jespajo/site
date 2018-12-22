@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
     <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-    <title>oh no</title>  
+    <title>tired</title>  
     <style>
       * {
         margin: 0; padding: 0;
@@ -33,7 +33,12 @@
     </style>
     <script>
       const crash = () => {
-        window.location.href = "https://en.wikipedia.org/wiki/Category:1994_births";
+        const button = document.getElementsByTagName("button")[0];
+        button.remove();
+        const msg = document.createElement("p");
+        msg.id = "msg";
+        msg.innerHTML = "your trying you'r'e best";
+        document.body.appendChild(msg);
       };
       document.addEventListener("DOMContentLoaded", function(){
         const button = document.getElementsByTagName("button")[0];
@@ -42,7 +47,7 @@
     </script>
   </head>
   <body>
-    <p id="crumbs"><a href="/">home</a> / im ti<span  style="color: red;">red</span></p>
-    <button>click here to feel bad about yourself</button>
+    <p id="crumbs"><a href="/">home</a> / ti<span  style="color: red;">red</span></p>
+    <button>click here to be less tired</button>
   </body>
 </html>
