@@ -24,6 +24,14 @@
       return (1 - mu) * _0 + mu * _1;
     };
 
+    const colours = [
+      "#70d6ff",
+      "#ff70a6",
+      "#ff9770",
+      "#ffd670",
+      "#e9ff70"
+    ];
+
     const init = () => {
       const canvas = document.getElementsByTagName("canvas")[0];
       const width = canvas.width = window.innerWidth;
@@ -45,7 +53,9 @@
         const mX = e.clientX;
         const mY = e.clientY;
         if (ctx.isPointInPath(o, mX, mY)) {
+          const colourNo = Math.floor(Math.random() * 6);
           const f = {
+            colour: colours[colourNo],
             x0: mX,
             y0: mY,
             x1: Math.floor(mX + (Math.random() * 3 - 1) *
@@ -66,21 +76,50 @@
           const x = interpolate(f.x0, f.x1, f.percent);
           const y = interpolate(f.y0, f.y1, f.percent);
 
+          // trigger explosion
           if (f.percent >= 1) {
-            fireworks.splice(fireworks.indexOf(f), 1)
+            fireworks.splice(fireworks.indexOf(f), 1);
+            const noBits = Math.floor(Math.random() * 7) + 7;
+            const s = {
+              colour: f.colour,
+              length: Math.floor(Math.random() * 0.1 * width + 0.1 * width),
+              percent: 0,
+              bits: []
+            };
+            for (let i = 0; i < noBits; i++) {
+              const bit = {
+                angle: Math.random() * 2 * Math.PI,
+                x0: f.x1,
+                y0: f.y1
+              };
+              bit.x1 = bit.x0 + s.length * Math.sin(bit.angle);
+              bit.y1 = bit.y0 + s.length * Math.cos(bit.angle);
+              s.bits.push(bit);
+            }
+            splosions.push(s);
           }
 
           const spark = new Path2D();
           spark.arc(x, y, 3, 0, 2 * Math.PI);
-          ctx.fillStyle = "white";
+          ctx.fillStyle = f.colour;
           ctx.fill(spark);
 
           f.percent += 0.04;
-
         }
 
         for (let s of splosions) {
-
+          if (s.percent >= 1) {
+            splosions.splice(splosions.indexOf(s), 1); 
+          }
+          s.percent += 0.03;
+          for (let bit of s.bits) {
+            const x = interpolate(bit.x0, bit.x1, s.percent);
+            const y = interpolate(bit.y0, bit.y1, s.percent);
+            const spark = new Path2D();
+            spark.arc(x, y, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = s.colour;
+            ctx.fill(spark);
+          }
         }
 
         window.requestAnimationFrame(update);
