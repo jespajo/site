@@ -73,8 +73,6 @@
         ctx.fill(o);
 
         for (let f of fireworks) {
-          const x = interpolate(f.x0, f.x1, f.percent);
-          const y = interpolate(f.y0, f.y1, f.percent);
 
           // trigger explosion
           if (f.percent >= 1) {
@@ -99,6 +97,9 @@
             splosions.push(s);
           }
 
+          // if no explosion draw firework spark
+          const x = interpolate(f.x0, f.x1, f.percent);
+          const y = interpolate(f.y0, f.y1, f.percent);
           const spark = new Path2D();
           spark.arc(x, y, 3, 0, 2 * Math.PI);
           ctx.fillStyle = f.colour;
