@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <!--
-    puzzles devised by nick marks:
-    https://open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo
-  -->
+  <!--  puzzles devised by nick marks:
+        https://open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo  -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +43,6 @@
       font-family: 'Inconsolata', monospace;
       margin: 0; padding: 0;
       box-sizing: border-box; }
-    
     #puzzle {
       display: grid;
       grid-template-rows: 12% auto 12%; }
@@ -79,21 +76,17 @@
     #play button:hover,
     #play button:focus {
       background: black; }
-
     .key { flex-grow: 1; }
-    .b0 { background-color: #78C5D5; }      /* blue */
-    .d0 { background-color: #459BA8; }      /* bluegreen */
-    .e0 { background-color: #79C268; }      /* green */
-    .fs0 { background-color: #C5D747; }     /* greenyellow */
-    .a1 { background-color: #F5D63D; }      /* yellow */
-    .b1 { background-color: #F18C32; }      /* orange */
-    .d1 { background-color: #E868A1; }      /* pink */
-    .e1 { background-color: #BF63A6; }      /* purple */
-
+    .b0 { background-color: #78C5D5; }    /* blue        */
+    .d0 { background-color: #459BA8; }    /* bluegreen   */
+    .e0 { background-color: #79C268; }    /* green       */
+    .fs0 { background-color: #C5D747; }   /* greenyellow */
+    .a1 { background-color: #F5D63D; }    /* yellow      */
+    .b1 { background-color: #F18C32; }    /* orange      */
+    .d1 { background-color: #E868A1; }    /* pink        */
+    .e1 { background-color: #BF63A6; }    /* purple      */
   </style>
-
-  <script>
-    
+  <script>   
     // spoilers!
     const puzzles = [
     { solution: ["d0", "e0", "fs0", "a1", "b1"],
@@ -115,28 +108,22 @@
       note.oncanplaythrough = function() {
         element.addEventListener("click", function() {
           const newNote = note.cloneNode();
-          newNote.play();
-        });
-      }; 
-    };
+          newNote.play(); }); };  };
 
+    // click simulator
     const click = function(elem) {
       const evt = new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
-        view: window
-      });
-      const canceled = !elem.dispatchEvent(evt);
-    };
+        view: window });
+      const canceled = !elem.dispatchEvent(evt); };
 
+    // when you click "play"
     const play = () => {
       let correct = true;
-
       const no = document.getElementById("number").innerText;
       const sol = puzzles[no - 1].solution;
-
       const spaces = document.getElementsByClassName("space");
-
       const playSpace = (i = 0) => {
         const space = spaces[i];
         if (i === spaces.length) {
@@ -151,15 +138,11 @@
         setTimeout(function() {
           spaces[i].style.border = "3px solid grey";
           playSpace(i + 1);
-        }, 1300);
-      }
-      playSpace();
-
-    };
+        }, 1300); }
+      playSpace(); };
 
     // change the puzzle
     const switchPuzzle = (no) => {
-
       // if all solved
       if (no === 4) {
         const puzzle = document.getElementById("puzzle");
@@ -171,12 +154,11 @@
         puzzle.style.fontSize = "3em";
         puzzle.style.padding = "30px";
         const credits = document.createElement("p");
-        credits.innerHTML = "<br />- puzzle design by <a href='https://open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo'>nick marks<a/><br />" +
-        "- coding by <a href='/'>jesse paris–jourdan</a>";
+        credits.innerHTML = "<br />- puzzle design by <a href='https://" +
+          "open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo'>nick marks<a/><br />" +
+          "- coding by <a href='/'>jesse paris–jourdan</a>";
         credits.style.fontSize = "0.7em";
-        puzzle.appendChild(credits);
-      }
-
+        puzzle.appendChild(credits); }
       else {
         // change the number at top
         const number = document.getElementById("number");
@@ -195,46 +177,36 @@
             playable(space); }
           else {
             space.setAttribute("ondrop", "drop(event)");
-            space.setAttribute("ondragover", "allowDrop(event)");
-          }
-        }
-      }
-    }
+            space.setAttribute("ondragover", "allowDrop(event)"); } } } }
 
     document.addEventListener("DOMContentLoaded", function() {
-
       // close keyboard when you click it
       const keyboard = document.getElementById("keyboard");
       keyboard.addEventListener("click", function() {
-        this.classList.remove("fullscreen");
-      });
+        this.classList.remove("fullscreen"); });
 
       // play notes when you click them
       const keys = document.getElementsByClassName("key");
       for (let i = 0; i < keys.length; i++) {
-        playable(keys[i]);
-      }
+        playable(keys[i]); }
 
+      // run function "play" when you hit the button
       const playButton = document.getElementsByTagName("button")[0];
       playButton.addEventListener("click", play);
 
       // load puzzle 1
-      switchPuzzle(1);
-    });
+      switchPuzzle(1); });
 
+    // drag & drop tools
     function allowDrop(ev) {
       ev.preventDefault(); }
-
     function drag(ev) {
       ev.dataTransfer.setData("note", ev.target.classList[1]); }
-
     function drop(ev) {
       ev.preventDefault();
       const data = ev.dataTransfer.getData("note");
       ev.target.classList.add(data);
-      playable(ev.target);  
-    }
-
+      playable(ev.target); }
   </script>
 </head>
 <body>
