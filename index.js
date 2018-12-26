@@ -1,18 +1,28 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const jsdom = require("jsdom");
 
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
+const d = './views/d/';
+let ds = [];
+let no1 = 0;
+fs.readdir(d, (err, files) => {
+  files.forEach(file => {
+    if (file.endsWith(".html")) {
+      no1++;
+    }
+  });
+});
 
-
-const d = './public/d/';
-let json = [];
+let no2 = 0;
 
 fs.readdir(d, (err, files) => {
   files.forEach(file => {
     if (file.endsWith(".html")) {
-      fs.readFile(d + file, 'utf8', function(err, html) {
+      const dPromise = new Promise((resolve, reject) => {
+        fs.readFile(d + file, 'utf8', function(err, html) {
           if (err) throw err;
 
           // find title
@@ -35,22 +45,58 @@ fs.readdir(d, (err, files) => {
             "-" + date.substring(6, 8);
           date = new Date(date).toISOString();
           
-          // push obj to json
-          const dObj = {
+          const obj = {
             date: date,
             title: title,
             url: d + file };
-          json.push(dObj);
+          
+          resolve(obj);
+        });
+      }).then(function(val) {
+        ds.push(val);
+        no2++;
+        if (no1 === no2) {
+          serve();
+        }
       });
-    }
+    };
   });
 });
 
+const serve = () => {
+  Promise.all(ds)
+  .then(function(vals) {
+    
+    /*
+    express()
+      .use(express.static(path.join(__dirname, 'public')))
+      .set('public', path.join(__dirname, 'public'))
+      .get('/', (req, res) => res.render('index.html'));
+    
 
+    for (let d of ds) {
+      const file = d.url.substring(8, d.url.length - 5);
+      console.log(file);
+      express()
+        .use(express.static(path.join(__dirname, 'public')))
+        .set('public', path.join(__dirname, 'public'))
+        .get(file, (req, res) => res.render(file + ".html"));
 
-/*
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .get('/', (req, res) => res.render('public/index.html'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
-*/
+    }
+
+    express().listen(port, () => console.log(`Listening on ${port}`));
+  
+    */
+
+    express()
+      .use(express.static(path.join(__dirname + '/public')))
+      .engine('html', require('ejs').renderFile)
+      .set('view engine', 'html')
+      .get('/d/20181225', function (req, res) {
+        res.render('d/20181225');
+      })
+      .listen(port, () => console.log(`Listening on ${port}`))
+
+  });
+  
+}

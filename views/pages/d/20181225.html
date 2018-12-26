@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <!--  puzzles devised by nick marks:
+        https://open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo  -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  <title>sounds</title>
+  <style>
+    /* animations */
+    @keyframes toLeft {
+      from { right: 0; }
+      to { right: 85%; } }
+    @keyframes toBottom {
+      from { top: 0; }
+      to { top: 90%; } }
+
+    /* stuff that will change depending on width */
+    #puzzle, #keyboard {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; }
+    #puzzle {
+      left: 15%; }
+    #keyboard { 
+      left: 0;
+      display: flex;
+      flex-direction: column; }
+    #keyboard:not(.fullscreen) {
+      animation: toLeft 1s forwards; }
+
+    @media screen and (min-width: 700px) {
+      #puzzle {
+        left: 0; bottom: 10%; }
+      #keyboard {
+        flex-direction: row; }
+      #keyboard:not(.fullscreen) {
+        animation-name: toBottom; } }
+
+    /* stuff that does not depend on width */
+    * {
+      font-family: 'Inconsolata', monospace;
+      margin: 0; padding: 0;
+      box-sizing: border-box; }
+    #puzzle {
+      display: grid;
+      grid-template-rows: 12% auto 12%; }
+    #number, #solution,
+    #spaces, #play {
+      display: flex;
+      justify-content: center; }
+    #solution, #spaces {
+      align-items: center; }
+    #number {
+      align-items: flex-end;
+      font-size: 3em;
+      color: grey; }
+    #spaces {
+      flex-wrap: wrap; }
+    .space {
+      margin: 7px;
+      height: 60px;
+      width: 60px;
+      border: 3px solid grey;
+      border-radius: 10px; }
+    #play {
+      align-items: flex-start; }
+    #play button {
+      border-radius: 10px;
+      font-size: 1.5em;
+      padding: 0.5em 1em;
+      border: none;
+      background: grey;
+      color: white; }
+    #play button:hover,
+    #play button:focus {
+      background: black; }
+    .key { flex-grow: 1; }
+    .b0 { background-color: #78C5D5; }    /* blue        */
+    .d0 { background-color: #459BA8; }    /* bluegreen   */
+    .e0 { background-color: #79C268; }    /* green       */
+    .fs0 { background-color: #C5D747; }   /* greenyellow */
+    .a1 { background-color: #F5D63D; }    /* yellow      */
+    .b1 { background-color: #F18C32; }    /* orange      */
+    .d1 { background-color: #E868A1; }    /* pink        */
+    .e1 { background-color: #BF63A6; }    /* purple      */
+  </style>
+  <script>   
+    // spoilers!
+    const puzzles = [
+    { solution: ["d0", "e0", "fs0", "a1", "b1"],
+      unknowns: [4] },
+    { solution: ["e0", "d0", "e0",
+                "fs0", "e0", "fs0",
+                "a1", "fs0", "a1"],
+      unknowns: [6, 8] },
+    { solution: ["e0", "e0", "b0", "b0", "fs0",
+                "a1", "a1", "e0", "e0", "b1",
+                "d1", "d1", "a1", "a1", "e1"],
+      unknowns: [5, 6, 7, 12, 13, 14] } ];
+
+    // add play event listener
+    const playable = (element) => {
+      const n = element.classList[1];
+      const src = "./src/20181225/" + n + ".mp3";
+      const note = new Audio(src);
+      note.oncanplaythrough = function() {
+        element.addEventListener("click", function() {
+          const newNote = note.cloneNode();
+          newNote.play(); }); };  };
+
+    // click simulator
+    const click = function(elem) {
+      const evt = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window });
+      const canceled = !elem.dispatchEvent(evt); };
+
+    // when you click "play"
+    const play = () => {
+      let correct = true;
+      const no = document.getElementById("number").innerText;
+      const sol = puzzles[no - 1].solution;
+      const spaces = document.getElementsByClassName("space");
+      const playSpace = (i = 0) => {
+        const space = spaces[i];
+        if (i === spaces.length) {
+          switchPuzzle(correct ? +no + 1 : +no);
+          return; }
+        if (space.classList[1] === sol[i]) {
+          space.style.border = "3px solid black"; }
+        else {
+          correct = false;
+          space.style.border = "3px solid red"; }
+        click(space);
+        setTimeout(function() {
+          spaces[i].style.border = "3px solid grey";
+          playSpace(i + 1);
+        }, 1300); }
+      playSpace(); };
+
+    // change the puzzle
+    const switchPuzzle = (no) => {
+      // if all solved
+      if (no === 4) {
+        const puzzle = document.getElementById("puzzle");
+        puzzle.innerHTML = "<p>congrats, you did it!</p>";
+        puzzle.style.display = "flex";
+        puzzle.style.flexDirection = "column";
+        puzzle.style.justifyContent = "center";
+        puzzle.style.alignItems = "center";
+        puzzle.style.fontSize = "3em";
+        puzzle.style.padding = "30px";
+        const credits = document.createElement("p");
+        credits.innerHTML = "<br />- puzzle design by <a href='https://" +
+          "open.spotify.com/artist/6cmdI5qBTsc34McfMzWPyo'>nick marks<a/><br />" +
+          "- coding by <a href='/'>jesse paris–jourdan</a>";
+        credits.style.fontSize = "0.7em";
+        puzzle.appendChild(credits); }
+      else {
+        // change the number at top
+        const number = document.getElementById("number");
+        number.innerHTML = no;
+
+        // add the spaces if they're not unknown
+        const spaces = document.getElementById("spaces");
+        spaces.innerHTML = "";
+        const p = puzzles[no - 1];
+        for (let i = 0; i < p.solution.length; i++) {
+          const space = document.createElement("div");
+          space.classList.add("space");
+          spaces.appendChild(space);
+          if (!p.unknowns.includes(i)) {
+            space.classList.add(p.solution[i]);
+            playable(space); }
+          else {
+            space.setAttribute("ondrop", "drop(event)");
+            space.setAttribute("ondragover", "allowDrop(event)"); } } } }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // close keyboard when you click it
+      const keyboard = document.getElementById("keyboard");
+      keyboard.addEventListener("click", function() {
+        this.classList.remove("fullscreen"); });
+
+      // play notes when you click them
+      const keys = document.getElementsByClassName("key");
+      for (let i = 0; i < keys.length; i++) {
+        playable(keys[i]); }
+
+      // run function "play" when you hit the button
+      const playButton = document.getElementsByTagName("button")[0];
+      playButton.addEventListener("click", play);
+
+      // load puzzle 1
+      switchPuzzle(1); });
+
+    // drag & drop tools
+    function allowDrop(ev) {
+      ev.preventDefault(); }
+    function drag(ev) {
+      ev.dataTransfer.setData("note", ev.target.classList[1]); }
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("note");
+      ev.target.classList.add(data);
+      playable(ev.target); }
+  </script>
+</head>
+<body>
+  <div id="puzzle">
+    <div id="number">1</div>
+    <div id="solution">
+      <div id="spaces"></div>
+    </div>
+    <div id="play">
+      <button>play</button>
+    </div>
+  </div>
+  <div id="keyboard" class="fullscreen">
+    <div class="key b0" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key d0" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key e0" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key fs0" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key a1" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key b1" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key d1" draggable="true" ondragstart="drag(event)"></div>
+    <div class="key e1" draggable="true" ondragstart="drag(event)"></div>
+  </div>
+</body>
+</html>
