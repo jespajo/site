@@ -5,12 +5,12 @@ const jsdom = require("jsdom");
 
 const port = process.env.PORT || 5000;
 
-const d = './views/d/';
+const d = './views/pages/d/';
 let ds = [];
 let no1 = 0;
 fs.readdir(d, (err, files) => {
   files.forEach(file => {
-    if (file.endsWith(".html")) {
+    if (file.endsWith(".ejs")) {
       no1++;
     }
   });
@@ -20,7 +20,7 @@ let no2 = 0;
 
 fs.readdir(d, (err, files) => {
   files.forEach(file => {
-    if (file.endsWith(".html")) {
+    if (file.endsWith(".ejs")) {
       const dPromise = new Promise((resolve, reject) => {
         fs.readFile(d + file, 'utf8', function(err, html) {
           if (err) throw err;
@@ -44,11 +44,11 @@ fs.readdir(d, (err, files) => {
             "-" + date.substring(4, 6) +
             "-" + date.substring(6, 8);
           date = new Date(date).toISOString();
-          
+
           const obj = {
             date: date,
             title: title,
-            url: d + file };
+            file: "pages/d/" + file };
           
           resolve(obj);
         });
@@ -66,36 +66,54 @@ fs.readdir(d, (err, files) => {
 const serve = () => {
   Promise.all(ds)
   .then(function(vals) {
-    
-    /*
-    express()
-      .use(express.static(path.join(__dirname, 'public')))
-      .set('public', path.join(__dirname, 'public'))
-      .get('/', (req, res) => res.render('index.html'));
-    
 
+    const app = express();
+    
+    app.use(express.static(path.join(__dirname + '/public')))
+      .engine('html', require('ejs').renderFile)
+      .set('view engine', 'html');
+
+    // render all the ds
     for (let d of ds) {
-      const file = d.url.substring(8, d.url.length - 5);
-      console.log(file);
-      express()
-        .use(express.static(path.join(__dirname, 'public')))
-        .set('public', path.join(__dirname, 'public'))
-        .get(file, (req, res) => res.render(file + ".html"));
-
+      const file = d.file;
+      const url = file.substring(5, file.length - 4);
+      app.get(url, (req, res) => { res.render(file); });
     }
 
-    express().listen(port, () => console.log(`Listening on ${port}`));
-  
-    */
+    app.get('/', (req, res) => { res.render('pages/index.ejs'); });
+    app.get('/d', (req, res) => {
+      let list = vals;
 
-    express()
-      .use(express.static(path.join(__dirname + '/public')))
-      .engine('html', require('ejs').renderFile)
-      .set('view engine', 'html')
-      .get('/d/20181225', function (req, res) {
-        res.render('d/20181225');
-      })
-      .listen(port, () => console.log(`Listening on ${port}`))
+      // sort by date with most recent at top
+      list.sort(function(a, b) {
+        return new Date(b.date) - new Date(a.date); });
+
+      list.forEach(function(val) {
+
+        // format date
+        const year = val.date.substring(2, 4);
+        let month = val.date.substring(5, 7);
+        let day = val.date.substring(8, 10);
+        const removeZeroes = (no) => {
+          if (no.charAt(0) === "0") {
+            return " " + no.charAt(1); }
+          else {
+            return no; } };
+        month = removeZeroes(month);
+        day = removeZeroes(day);
+        const date = day + "/" + month + "/" + year;
+        val.date = date;
+
+        // format url
+        val.url = val.file.substring(5, val.file.length - 4);
+      });
+
+      res.render('pages/d.ejs', {
+        ds: list
+      });
+    });
+
+    app.listen(port, () => console.log(`Listening on ${port}`));
 
   });
   

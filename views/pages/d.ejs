@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
   <style>
     * {
-      margin: 0; padding: 0;
       font-family: 'Inconsolata', monospace;
       box-sizing: border-box; }
     body {
@@ -20,12 +19,23 @@
     td:first-child {
       text-align: right; }
   </style>
-  <title>/d/</title>
-  <script>
-  </script>
+  <title>/d/etritus</title>
 </head>
 <body>
-  <h2>/d/</h2>
-  <div id="d"></div>
+  <h2>/d/etritus</h2>
+  <table>
+    <tbody>
+      <% ds.forEach(function(d) { %>
+        <tr>
+          <td><%= d.date %></td>
+          <td>
+            <a href="<%= d.url %>">
+              <%= d.title %>
+            </a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody> 
+  </table>
 </body>
 </html>
