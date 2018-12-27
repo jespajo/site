@@ -93,12 +93,12 @@ const serve = () => {
       .engine('html', require('ejs').renderFile)
       .set('view engine', 'html');
 
+    app.use('/d/src', express.static('views/pages/d/src'));
     // render all the ds
     for (let d of ds) {
       const file = d.file;
       const url = file.substring(5, file.length - 4);
-      app.get(url, (req, res) => { res.render(file); });
-    }
+      app.get(url, (req, res) => { res.render(file); }); }
 
     app.get('/', (req, res) => { res.render('pages/index.ejs'); });
     app.get('/d', (req, res) => {
