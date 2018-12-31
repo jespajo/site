@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const jsdom = require("jsdom");
 
 const port = process.env.PORT || 5000;
 
@@ -69,6 +68,14 @@ const serve = () => {
 
     // formatting
     let list = vals;
+
+    // add extras
+    let extras = fs.readFileSync("views/pages/d/extra.json");
+    extras = JSON.parse(extras);
+    for (let e of extras) {
+      list.push(e);
+    }
+
     list.sort(function(a, b) {
       return new Date(b.date) - new Date(a.date); });
     list.forEach(function(val) {
@@ -84,7 +91,9 @@ const serve = () => {
       day = removeZeroes(day);
       const date = day + "/" + month + "/" + year;
       val.date = date;
-      val.url = val.file.substring(5, val.file.length - 4);
+      if (d.file) {
+        val.url = val.file.substring(5, val.file.length - 4);
+      }
     });
 
     const app = express();
@@ -96,9 +105,10 @@ const serve = () => {
     app.use('/d/src', express.static('views/pages/d/src'));
     // render all the ds
     for (let d of ds) {
-      const file = d.file;
-      const url = file.substring(5, file.length - 4);
-      app.get(url, (req, res) => { res.render(file); }); }
+      if (d.file) {
+        const file = d.file;
+        const url = file.substring(5, file.length - 4);
+        app.get(url, (req, res) => { res.render(file); }); } }
 
     app.get('/', (req, res) => { res.render('pages/index.ejs'); });
     app.get('/d', (req, res) => {
