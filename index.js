@@ -6,13 +6,9 @@ const port = process.env.PORT || 5000;
 
 const d = './views/pages/d/';
 let ds = [];
-let no1 = 0;
+let no1;
 fs.readdir(d, (err, files) => {
-  files.forEach(file => {
-    if (file.endsWith(".ejs")) {
-      no1++;
-    }
-  });
+  no1 = files.reduce((a, c) => c.endsWith(".ejs") ? a + 1 : a, 0);
 });
 
 let no2 = 0;
