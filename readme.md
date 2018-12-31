@@ -6,3 +6,4 @@ hello. this is the personal website of jesse paris–jourdan. what are you doing
 
 - clean up `index.js`
 - fill up `d/` with new stuff
+- generally clean up stuff (static files should go in `public` etc.)
