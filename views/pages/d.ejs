@@ -26,16 +26,14 @@
   <h2>stuff</h2>
   <table>
     <tbody>
-      <% ds.forEach(function(d) { %>
-        <tr>
-          <td><%= d.date %></td>
-          <td>
-            <a href="<%= d.url %>">
-              <%= d.title %>
-            </a>
-          </td>
-        </tr>
-      <% }); %>
+      <% ds.forEach(function(d) { %><tr>
+        <td><%= d.date %></td>
+        <td>
+          <a href="<%= d.url %>">
+            <%= d.title %>
+          </a>
+        </td>
+      </tr><% }); %>
     </tbody> 
   </table>
 </body>
