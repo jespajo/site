@@ -1,1 +1,0 @@
-# The personal website of Jesse Paris–Jourdan
