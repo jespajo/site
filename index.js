@@ -91,7 +91,7 @@ const serve = () => {
       day = removeZeroes(day);
       const date = day + "/" + month + "/" + year;
       val.date = date;
-      if (d.file) {
+      if (!val.url) {
         val.url = val.file.substring(5, val.file.length - 4);
       }
     });
@@ -105,10 +105,9 @@ const serve = () => {
     app.use('/d/src', express.static('views/pages/d/src'));
     // render all the ds
     for (let d of ds) {
-      if (d.file) {
-        const file = d.file;
-        const url = file.substring(5, file.length - 4);
-        app.get(url, (req, res) => { res.render(file); }); } }
+      const file = d.file;
+      const url = file.substring(5, file.length - 4);
+      app.get(url, (req, res) => { res.render(file); }); }
 
     app.get('/', (req, res) => { res.render('pages/index.ejs'); });
     app.get('/d', (req, res) => {
