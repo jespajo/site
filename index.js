@@ -1,10 +1,102 @@
+/* Import modules */
+const express = require("express");
+const path = require("path");
+
+/* Global stuff */
+const app = express();
+
+/* Serve static files in library */
+app.use(express.static(__dirname + "/jespajo.com/lib"));
+
+/* Serve home page */
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname + "/jespajo.com/pages/index.html"));
+});
+
+/********************
+ BIG D SECTION
+*******************/
+
+/* SERVE D.HTML  
+*/
+
+// const table = require("./modules/table.js");
+
+const fs = require('fs');
+
+/* Engine for dealing with d.html */
+app.engine('html', function (filePath, options, callback) {
+  fs.readFile(filePath, function (err, html) {
+    if (err) return callback(err)
+
+    if (filePath === __dirname + "/jespajo.com/pages/d.html") {
+      const directory = "<table>" + 
+        options.dir.reduce((acc, d) => { return acc + `
+          <tr>
+            <td>${d.date}</td>
+            <td><a href=${d.url}>${d.title}</a></td>
+          </tr>` }, "") + `
+        </table>`;
+      html = html.toString()
+        .replace("<directory />", directory);
+    }
+
+      return callback(null, html)
+  })
+})
+
+app.get('/d', function (req, res) {
+  app.set('views', './jespajo.com/pages/')
+  res.render("d.html", {
+    dir: [
+    {
+      date: "20180818",
+      title: "Hello there! I have depression!",
+      url: "https://google.com/" },
+    {
+      date: "20170302",
+      title: "fuck you!",
+      url: "https://duckduckgo.com/" }
+    ]
+  });
+})
+
+
+
+/* SERVE EVERYTHING IN THE D FOLDER
+  1. html's
+
+  2. .md's
+
+    - link to md.js
+
+  3. other links (stored as .csv)
+
+  */
+
+/********************
+ END OF BIG D SECTION
+*******************/
+  
+
+/* SERVE!
+*/
+const server = app.listen(4005);
+
+
+
+
+
+
+/*
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
 const port = process.env.PORT || 5000;
 
-const d = './views/pages/d/';
+const d = './jespajo.com/pages/d/';
 let ds = [];
 let no1;
 fs.readdir(d, (err, files) => {
@@ -66,7 +158,7 @@ const serve = () => {
     let list = vals;
 
     // add extras
-    let extras = fs.readFileSync("views/pages/d/extra.json");
+    let extras = fs.readFileSync("jespajo.com/pages/d/extra.json");
     extras = JSON.parse(extras);
     for (let e of extras) {
       list.push(e);
@@ -94,11 +186,11 @@ const serve = () => {
 
     const app = express();
     
-    app.use(express.static(path.join(__dirname + '/public')))
+    app.use(express.static(path.join(__dirname + '/jespajo.com/lib')))
       .engine('html', require('ejs').renderFile)
       .set('view engine', 'html');
 
-    app.use('/d/src', express.static('views/pages/d/src'));
+    app.use('/d/src', express.static('jespajo/pages/d/src'));
     // render all the ds
     for (let d of ds) {
       const file = d.file;
@@ -115,3 +207,5 @@ const serve = () => {
 
   });
 };
+
+*/
