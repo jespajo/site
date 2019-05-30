@@ -35,5 +35,4 @@ root
       - extra.json
   - lib/ (everything i need for the site that is stored statically (i.e. as a file with an extension))
     - css, js
-    - icons/
-    - other images
+    - icon

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+<link href="../style.css" rel="stylesheet">
+<title>listen</title>
+<style>
+canvas {
+  border: 1px solid #551a8b; }
+</style>
+<script>
+let canvas, ctx;
+let circles = [];
+const src = note => "src/20181205/" + note + ".mp3";
+const notes = [
+{ x: 250, y: 250,
+  url: src("e") },
+{ x: 50, y: 50,
+  url: src("b") } ];
+let e = new Audio(notes[0].url);
+let b = new Audio(notes[1].url);
+function step() {
+  ctx.clearRect(0, 0, 300, 300);
+  for (let n of notes) {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath(); }
+  for (let c of circles) {
+    c.r = ((Date.now() - c.t) / 100) ** 1.5;
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+    const short = (i) => {
+      const x = c.x - notes[i].x;
+      const y = c.y - notes[i].y;
+      return Math.hypot(x, y); };
+    const touchE = c.r - 5 < short(0) && c.r + 5 > short(0);
+    const touchB = c.r - 5 < short(1) && c.r + 5 > short(1);
+    if (touchE) {
+      ctx.strokeStyle = "blue";
+      if (c.touchedE === false) {
+        e.play(); e = new Audio(notes[0].url);
+        c.touchedE = true; } }
+    else if (touchB) {
+      ctx.strokeStyle = "red";
+      if (c.touchedB === false) {
+        b.play(); b = new Audio(notes[1].url);
+        c.touchedB = true; } }
+    else { ctx.strokeStyle = "black"; };
+    console.log(c.touchedE, c.touchedB);
+    ctx.stroke();
+    ctx.closePath(); }
+  circles = circles.filter(c => c.r < 425);
+  window.requestAnimationFrame(step); }
+document.addEventListener("DOMContentLoaded", function() {
+  canvas = document.getElementsByTagName("canvas")[0];
+  canvasBox = canvas.getBoundingClientRect();
+  ctx = canvas.getContext("2d");
+  canvas.addEventListener("click", function(event) {
+    circle = {
+      x: event.clientX - canvasBox.left - 1,
+      y: event.clientY - canvasBox.top - 1,
+      t: Date.now(),
+      touchedE: false,
+      touchedB: false };
+    circles.push(circle); });
+  window.requestAnimationFrame(step); });
+</script>
+</head>
+<body>
+<p><a href="../">home</a> / listen</p>
+<canvas height="300" width="300">
+</body>
+</html>
