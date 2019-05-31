@@ -1,10 +1,20 @@
-## my personal website
+## My website
 
-hello. this is the personal website of jesse paris–jourdan. what are you doing here?
+Hello. This is the personal website of Jesse Paris-Jourdan.
 
-## to do:
+The site is a Node.js web server.
 
-- finish rendering `/d` and the `.html` files within!
+A unique Express.js template engine replaces specified self-closing tags such as `<directory />` with blocks of html code.
 
-- add google analytics
-- add simple `.md` to `.html` converter so i can upload pages as `.md`s
+One module (`modules/d.js`) collates files in `d/` (along with links located in `d/extra.json` (which by the way I should change that to `.csv`—easier to manage)) into a JavaScript object and converts the object into a [directory](http://jespajo.com/d). The purpose is to make uploading a new html page on my site as simple as dropping it into a folder and pushing the site to Heroku—the directory is generated automatically.
+
+My approach is simple and DIY. I didn't use any frameworks or libraries. It's all vanilla js.
+
+
+### To do
+
+- Finish stabilising everything in `d/` now that the refactoring is complete.
+
+- Simple md to html converter. This would allow me to save markdown files in `d/` and have them rendered on a simple but nice-looking html page which then appears in the directory.
+
+- Add Google Analytics.
