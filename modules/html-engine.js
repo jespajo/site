@@ -1,5 +1,11 @@
+/* Imports */
 const fs = require("fs");
 
+/* In the object below, each of the self-closing tags (such as `<directory />`)
+ * I use in various html files is associated with a function. When the user 
+ * opens a page containing this kind of tag, the app executes the function and
+ * replaces the tag with the string returned by the function.
+ */
 const replacements = {
   directory: function() {
     const dir = require("./d").dir;
@@ -7,7 +13,7 @@ const replacements = {
       dir.reduce((acc, d) => {
           return acc + `
             <tr>
-              <td>${d.date}</td>
+              <td>${d.dateText}</td>
               <td><a href=${d.url}>${d.title}</a></td>
             </tr>` }, "") + `
           </table>`;

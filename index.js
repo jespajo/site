@@ -20,8 +20,8 @@ const d = require(__dirname + "/modules/d.js");
 app.use("/d", d.router);
 
 /* Serve! */
-const server = app.listen(4005);
-
+const port = process.env.PORT || 3241;
+app.listen(port, () => console.log(`Listening on ${port}`));
 
 
 
