@@ -3,10 +3,10 @@ const fs = require("fs");
 
 const router = express.Router();
 
-let links = fs.readFileSync("jespajo.com/pages/d/links.json");
+let links = fs.readFileSync("public/pages/d/links.json");
 links = JSON.parse(links);
 
-fs.readdir("jespajo.com/pages/d/", (err, files) => {
+fs.readdir("public/pages/d/", (err, files) => {
   for (let file of files) {
     const [fileName, fileExtension] = file.split(".");
 
@@ -27,7 +27,7 @@ fs.readdir("jespajo.com/pages/d/", (err, files) => {
 
        */
 
-      fs.readFile("jespajo.com/pages/d/" + file, "utf8", function(err, html) {
+      fs.readFile("public/pages/d/" + file, "utf8", function(err, html) {
         if (err) throw err;
 
         // find title
@@ -79,11 +79,23 @@ links.sort(function(a, b) {
 links.forEach(link => {
   const ld = link.date;
   const d = ld.slice(7 - (ld.charAt(6) !== "0"));
-  const m = ld.slice(5 - (ld.charAt(4) !== "0"), 6);
+  let m = ld.slice(5 - (ld.charAt(4) !== "0"), 6);
+  m = (" " + m).slice(-2);
   const y = ld.slice(2, 4);
-  link.dateText = [d, (" " + m).slice(-2), y].join("/");
+  link.dateText = [d, m, y].join("/");
 });
 
+const replacement = () => {
+  return "<table>" + 
+    links.reduce((acc, d) => {
+        return acc + `
+          <tr${d.hidden ? " class='hidden'" : ""}>
+            <td>${d.dateText}</td>
+            <td><a href=${d.url}>${d.title}</a></td>
+          </tr>` }, "") + `
+        </table>`;
+}
+
 // Exports
+module.exports.replacement = replacement;
 module.exports.router = router;
-module.exports.dir = links;

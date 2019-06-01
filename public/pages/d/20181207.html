@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+    <title>whitsun</title>
+    <style>
+      * {
+        overflow: hidden;
+        margin: 0; padding: 0;
+        font-family: monospace;
+        font-size: 16px; }
+      div#container {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0; }
+      a, span {
+        cursor: pointer;
+        text-decoration: underline;
+        color: #0000ee; }
+      div#crumbs, div#poem {
+        position: absolute;
+        padding: 0 8px 0 8px; }
+      div#crumbs {
+        left: 0; top: 16px; }
+      div#poem {
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content; }
+      div#poem p {
+        padding-left: 19.28px;
+        text-indent: -19.28px; }
+      div#poem p.indented {
+        text-indent: 0; }
+    </style>
+    <script>
+      let container, html;
+      let canvas, ctx;
+      let width, height;
+      let img, data;
+      let f = 0;
+      const createCanvas = function() {
+        // find width and height
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        // create svg from DOM
+        const parsed = new DOMParser().parseFromString(html, "text/xml");
+        const rules = document.styleSheets[0].cssRules;
+        for (let r of rules) {
+          const elements = parsed.querySelectorAll(r.selectorText);
+          for (let e of elements) {
+            for (let i = 0; i < r.style.length; i++) {
+              e.style[r.style[i]] = r.style[r.style[i]]; } } };
+        const styled = parsed.getElementById('container').outerHTML;
+        const svg = "data:image/svg+xml," +
+          "<svg xmlns='http://www.w3.org/2000/svg' width='" + width + "' height='" + height + "'>" +
+            "<foreignObject width='100%' height='100%'>" +
+              styled +
+            "</foreignObject>" +
+          "</svg>";
+        img = new Image();
+        img.src = svg;
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, width, height);
+          data = ctx.getImageData(0, 0, width, height);
+          console.log("canvas ready to go!"); }; }
+      const init = function() {
+        // get DOM objects
+        container = document.getElementById("container");
+        html = container.outerHTML;
+        // create canvas obj in background
+        canvas = document.createElement("canvas");
+        ctx = canvas.getContext("2d");
+        createCanvas();
+        addEventListeners(); };
+      const toCanvas = function() {
+        container.innerHTML = "";
+        container.appendChild(canvas); };
+      const toHTML = function() {
+        location.reload(); };
+      const animate = function(word, event) {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        return function() {
+          f++;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, width, height);
+          switch(word) {
+            case "away":
+              let newData = data;
+              for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                  const index = (y * width + x) * 4;
+                  for (let i = index; i < index + 4; i++) {
+                    let m = (i - 28 + width * 16) % data.data.length;
+                    newData.data[i] = data.data[m]; }; }; };
+              ctx.putImageData(newData, 0, 0);
+              break;
+            case "hot":
+              for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                  hypot = Math.hypot(x - mouseX, y - mouseY);
+                  if (hypot < f * 2) {
+                    const index = (y * width + x) * 4;
+                    data.data[index] = Math.min(f * 2, 255); } }; };
+              ctx.putImageData(data, 0, 0);
+              break;
+            case "level":
+              // conways game of life
+              // first need to make every pixel black or white
+              if (f === 1) {
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    let pixel = data.data.slice(index, index + 4);
+                    let white = true;
+                    for (let i = 0; i < pixel.length; i++) {
+                      if (pixel[i] !== 0) {
+                        white = false; }; };
+                    if (!white) {
+                      for (let i = 0; i < pixel.length - 1; i++) {
+                        pixel[i] = 0; };
+                      pixel[3] = 255; };
+                    for (let i = 0; i < pixel.length; i++) {
+                      data.data[index + i] = pixel[i]; }; }; }; };
+              // then do conway calculations
+              if (f) {
+                let conway = [];
+                for (let y = 0; y < height; y++) {
+                  let row = [];
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    const black = data.data[index + 3] === 255;
+                    row.push(black ? 1 : 0); };
+                  conway.push(row); };
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    let alive = data.data[index + 3] === 255;
+                    // calc neighbours alve
+                    let neighbours = 0;
+                    const range = [-1, 0, +1];
+                    for (let i = 0; i < range.length; i++) {
+                      for (let j = 0; j < range.length; j++) {
+                        const k = range[i];
+                        const l = range[j];
+                        if (!(k == 0 && l == 0)) {
+                          try { neighbours += conway[y + k][x + l]; }
+                          catch (err) {}; }; }; };
+                    if (alive) {
+                      // rules 1 and 3
+                      if (neighbours < 2 || neighbours > 3) {
+                        alive = false; }; }
+                    // rule 4
+                    else if (neighbours == 3) {
+                      alive = true; };
+                    if (alive) {
+                      data.data[index + 3] = 255; }
+                    else {
+                      data.data[index + 3] = 0; }; }; }; };
+              ctx.putImageData(data, 0, 0);
+              break;
+            case ".":
+              for (let i = 0; i < data.data.length; i++) {
+                const r = Math.random() * f;
+                data.data[i] = (data.data[i] + r) & 0xff; }
+              ctx.putImageData(data, 0, 0);
+              break;
+            default:
+              console.warn("error"); };
+          window.requestAnimationFrame(animate(word, event)); } };
+      const addEventListeners = function() {
+        container.addEventListener("contextmenu", function(event) {
+          toHTML();
+          event.preventDefault(); });
+        const spans = container.querySelectorAll("span");
+        spans.forEach(function(span) {
+          const word = span.innerText;
+          span.addEventListener("click", function(event) {
+            toCanvas();
+            window.requestAnimationFrame(animate(word, event)); }); }); };
+      document.addEventListener("DOMContentLoaded", init);
+      window.addEventListener("resize", toHTML);
+    </script>
+  </head>
+  <body>
+    <div id="container" xmlns="http://www.w3.org/1999/xhtml">
+      <div id="poem">
+        <p>That Whitsun, I was late getting <span>away</span>:</p>
+        <p class="indented">Not till about</p>
+        <p>One-twenty on the sunlit Saturday</p>
+        <p>Did my three-quarters-empty train pull out,</p>
+        <p>All windows down, all cushions <span>hot</span>, all sense</p>
+        <p>Of being in a hurry gone. We ran</p>
+        <p>Behind the backs of houses, crossed a street</p>
+        <p>Of blinding windscreens, smelt the fish-dock; thence</p>
+        <p>The river&rsquo;s <span>level</span> drifting breadth began,</p>
+        <p>Where sky and Lincolnshire and water meet<span>.</span></p>
+      </div>
+      <div id="crumbs">
+        <a href="./../">home</a> / whitsun
+      </div>
+    </div>
+  </body>
+</html>

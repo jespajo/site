@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+<link href="../style.css" rel="stylesheet">
+<title>come here</title>
+<style>
+  canvas { border: 1px solid black; }
+</style>
+<script type="text/javascript">
+
+  let ctx;
+  let mouseX;
+
+  const rangeTween = function(num, domain_min, domain_max, range_min, range_max) {
+    let w;
+    if (num < domain_min) {
+      w = 1; }
+    else if (num > domain_max) {
+      w = 0; }
+    else {
+      const domain = domain_max - domain_min;
+      w = (domain - (num - domain_min)) / domain; }
+    return w * range_min + (1 - w) * range_max; }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const canvas = document.getElementsByTagName("canvas")[0];
+    const cX = canvas.getBoundingClientRect().left;
+    ctx = canvas.getContext('2d');
+    ctx.setTransform(2, 0, 0, 2, 0, -150);
+    canvas.addEventListener("mousemove", function(event) {
+      ctx.setTransform(2, 0, 0, 2, 0, -150);
+      ctx.clearRect(0, 0, 750, 750);
+      mouseX = event.clientX - cX;
+      mouseX = rangeTween(-mouseX, -300, 0, 0, 68);
+      curly(0, 150, -0.01*mouseX); });
+    curly(0, 150); });
+
+  const curly = function(x, y, curl=-0.1, length=40, i=1) {
+    if (i >= 7) {
+      return null; }
+    else {
+      ctx.translate(x, y);
+      ctx.beginPath();
+      ctx.rotate(curl);
+      ctx.moveTo(0, 0);
+      length = 2 * length / 3;
+      ctx.lineTo(length, 0);
+      ctx.stroke();
+      return curly(length, 0, curl+(i/1000), length, i+1);
+    }
+  }
+
+</script>
+</head>
+<body>
+<p><a href="../">home</a> / come here<p>
+<p>
+<canvas id="canvas" width="300" height="300"></canvas>
+</p>
+</body>

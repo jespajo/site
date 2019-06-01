@@ -3,15 +3,15 @@ const express = require("express");
 const app = express();
 
 /* Static files in library */
-app.use(express.static(__dirname + "/jespajo.com/lib"));
+app.use(express.static(__dirname + "/public/lib"));
 
 /* Home page */
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/jespajo.com/pages/index.html");
+  res.sendFile(__dirname + "/public/pages/index.html");
 });
 
 /* Template engine for HTML */
-app.set("views", __dirname + "/jespajo.com/pages/");
+app.set("views", __dirname + "/public/pages/");
 const htmlEngine = require(__dirname + "/modules/html-engine.js");
 app.engine("html", htmlEngine);
 

@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <title>image viewer</title>
+  <style>
+    * { box-sizing: border-box;
+      font-family: "Inconsolata", monospace; }
+    canvas { border: 1px solid black; }
+    #form {
+      width: 300px;
+      display: flex; }
+    input { flex-grow: 1; }
+  </style>
+  <script>
+    let canvas, ctx;
+    let zoom, scale, minScale;
+    let x = y = 0;
+    let width, height, max;
+    let img, locus = [0, 0];
+    const maxZoom = 3;
+    const clearCtx = function(){
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 300, 300); }
+    const setScale = function(){
+      const m = (1 - minScale) / maxZoom;
+      scale = m * zoom + minScale; };
+    const setTrans = function(){
+      const nat300 = 300 / scale;
+      const widthDiff = nat300 - width;
+      const heightDiff =  nat300 - height;
+      x = locus[0] * widthDiff;
+      y = locus[1] * heightDiff;
+      if (height < nat300) {
+        y = heightDiff / 2; }
+      else if (width < nat300) {
+        x = widthDiff / 2; }; };
+    const imgInit = function(){
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      input.value = input.value || "https://i.redd.it/lfndtoirttvx.jpg";
+      img = new Image();
+      img.src = input.value;
+      img.onload = function() {
+        width = this.naturalWidth;
+        height = this.naturalHeight;
+        max = Math.max(width, height);
+        minScale = 300 / max;
+        zoom = 0;
+        drawFrame(); }; };
+    const setLocus = function(event){
+      const box = canvas.getBoundingClientRect();
+      const x = (event.clientX - box.left) / 300;
+      const y = (event.clientY - box.top) / 300;
+      const locus = [x, y];
+      return locus; }
+    const drawFrame = function(event={clientX:0,clientY:0}){
+      locus = setLocus(event);
+      clearCtx();
+      setScale();
+      ctx.scale(scale, scale);
+      setTrans();
+      ctx.translate(x, y);
+      ctx.drawImage(img, 0, 0, width, height); };
+    document.addEventListener("DOMContentLoaded", function(){
+      canvas = document.getElementsByTagName("canvas")[0];
+      ctx = canvas.getContext('2d');
+      const button = document.getElementsByTagName("button")[0];
+      button.addEventListener("click", imgInit);
+      canvas.addEventListener("click", function(event){
+        zoom < maxZoom ? zoom++ : null;
+        drawFrame(event); });
+      canvas.oncontextmenu = function(event){
+        zoom > 0 ? zoom-- : null;
+        drawFrame(event);
+        return false; };
+      imgInit(); });
+  </script>
+</head>
+<body>
+  <p><a href="../">home</a> / image viewer</p>
+  <p><canvas width="300" height="300"></canvas></p>
+  <p style="margin-bottom: 5px;">use another image:</p>
+  <div id="form">
+    <input id="input">
+    <button>go</button>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  <title>crash my tab</title>
+  <style>
+    * {
+      font: 18px 'Inconsolata', monospace; }
+  </style>
+  <script>
+    const msg = "this is the laziest idea ever. i did a bunch of research into perlin noise that turned out to be way more complex than I thought it would be. And now my laptop is on low battery and I'm at my dad's house where there's no electricity";
+    document.addEventListener("DOMContentLoaded", function(){
+      const button = document.getElementsByTagName("button")[0];
+      button.addEventListener("click", function(){
+        while (true) {
+          console.log(msg);
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <p><a href="/">home</a> / crash</p>
+  <button>crash</button>
+</body>
+</html>
