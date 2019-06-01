@@ -13,8 +13,10 @@ My approach is simple and DIY. I didn't use any frameworks or libraries. It's al
 
 ### To do
 
-- Finish stabilising everything in `d/` now that the refactoring is complete.
+- Continue rewriting `index.js`
 
-- Simple md to html converter. This would allow me to save markdown files in `d/` and have them rendered on a simple but nice-looking html page which then appears in the directory.
+- Finish stabilising everything in `d/` now that the refactoring is complete
 
-- Add Google Analytics.
+- Simple md to html converter. This would allow me to save markdown files in `d/` and have them rendered on a simple but nice-looking html page which then appears in the directory
+
+- Add Google Analytics

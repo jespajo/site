@@ -1,89 +1,26 @@
 /* Import modules */
 const express = require("express");
-const path = require("path");
-
-/* Global stuff */
 const app = express();
 
-/* Serve static files in library */
+/* Static files in library */
 app.use(express.static(__dirname + "/jespajo.com/lib"));
 
-/* Serve home page */
+/* Home page */
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname + "/jespajo.com/pages/index.html"));
+  res.sendFile(__dirname + "/jespajo.com/pages/index.html");
 });
 
-/********************
- BIG D SECTION
-*******************/
+/* Template engine for HTML */
+app.set("views", __dirname + "/jespajo.com/pages/");
+const htmlEngine = require(__dirname + "/modules/html-engine.js");
+app.engine("html", htmlEngine);
 
-/* SERVE D.HTML  
-*/
+/* /d and /d/-files */
+const d = require(__dirname + "/modules/d.js");
+app.use("/d", d.router);
 
-// const table = require("./modules/table.js");
-
-const fs = require('fs');
-
-/* Engine for dealing with d.html */
-app.engine('html', function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, html) {
-    if (err) return callback(err)
-
-    if (filePath === __dirname + "/jespajo.com/pages/d.html") {
-      const directory = "<table>" + 
-        options.dir.reduce((acc, d) => { return acc + `
-          <tr>
-            <td>${d.date}</td>
-            <td><a href=${d.url}>${d.title}</a></td>
-          </tr>` }, "") + `
-        </table>`;
-      html = html.toString()
-        .replace("<directory />", directory);
-    }
-
-      return callback(null, html)
-  })
-})
-
-app.get('/d', function (req, res) {
-  app.set('views', './jespajo.com/pages/')
-  res.render("d.html", {
-    dir: [
-    {
-      date: "20180818",
-      title: "Hello there! I have depression!",
-      url: "https://google.com/" },
-    {
-      date: "20170302",
-      title: "fuck you!",
-      url: "https://duckduckgo.com/" }
-    ]
-  });
-})
-
-
-
-/* SERVE EVERYTHING IN THE D FOLDER
-  1. html's
-
-  2. .md's
-
-    - link to md.js
-
-  3. other links (stored as .csv)
-
-  */
-
-/********************
- END OF BIG D SECTION
-*******************/
-  
-
-/* SERVE!
-*/
+/* Serve! */
 const server = app.listen(4005);
-
-
 
 
 
