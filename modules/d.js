@@ -13,9 +13,7 @@ fs.readdir("public/pages/d/", (err, files) => {
     if (fileExtension === "html") {
 
       const row = {
-        url: "d/" + fileName,
-        date: "DEFAULT",
-        title: "DEFAULT"
+        url: "d/" + fileName
       };
 
       /* CURRENTLY WORKING ON THIS SECTION (CWOTS)
