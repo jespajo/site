@@ -1,4 +1,3 @@
-// Imports
 const fs = require("fs");
 
 // Library of self-closing tags to replace

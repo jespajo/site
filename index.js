@@ -1,4 +1,3 @@
-// Import modules
 const express = require("express");
 const app = express();
 
@@ -19,6 +18,6 @@ app.engine("html", htmlEngine.engine);
 const d = require(__dirname + "/modules/d");
 app.use("/d", d.router);
 
-// Serve!
+// Serve
 const port = process.env.PORT || 3241;
 app.listen(port, () => console.log(`Listening on ${port}`));
