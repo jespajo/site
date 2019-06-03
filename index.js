@@ -1,24 +1,24 @@
-/* Import modules */
+// Import modules
 const express = require("express");
 const app = express();
 
-/* Static files in library */
+// Static files in library
 app.use(express.static(__dirname + "/public/lib"));
 
-/* Home page */
-app.get("/", function(req, res) {
+// Home page
+app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/pages/index.html");
 });
 
-/* Template engine for HTML */
+// Template engine for HTML
 app.set("views", __dirname + "/public/pages/");
-const htmlEngine = require(__dirname + "/modules/html-engine.js");
-app.engine("html", htmlEngine);
+const htmlEngine = require(__dirname + "/modules/html-engine");
+app.engine("html", htmlEngine.engine);
 
-/* /d and /d/-files */
-const d = require(__dirname + "/modules/d.js");
+// /d and /d/-files
+const d = require(__dirname + "/modules/d");
 app.use("/d", d.router);
 
-/* Serve! */
+// Serve!
 const port = process.env.PORT || 3241;
 app.listen(port, () => console.log(`Listening on ${port}`));

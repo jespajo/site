@@ -9,7 +9,7 @@ const replacements = {
 // Recursive function looks for tags (from library above)
 // runs function associated with each
 // and replaces tag with value returned by function
-const runReplacements = function(html) {
+const runReplacements = (html) => {
   for (let tag of Object.keys(replacements)) {
     const element = "<" + tag + " />";
     if (html.includes(element)) {
@@ -21,13 +21,11 @@ const runReplacements = function(html) {
 }
 
 // HTML engine used by index.js
-const engine = function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, html) {
+module.exports.engine = (filePath, options, callback) => {
+  fs.readFile(filePath, (err, html) => {
     if (err) return callback(err);
     html = html.toString();
     html = runReplacements(html);
     return callback(null, html);
   });
 }
-
-module.exports = engine;

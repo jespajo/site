@@ -1,15 +1,15 @@
 const express = require("express");
-const fs = require("fs");
 const router = express.Router();
+const fs = require("fs");
 
 // Serve main page (directory)
-router.get("/", function (req, res) {
+router.get("/", (req, res) => {
   res.render("d.html");
 });
 
-// Serve everything in d/ file
+// Serve everything in d/ folder
 fs.readdirSync("public/pages/d/").forEach(file => {
-  router.get("/" + file.split(".")[0], function (req, res) {
+  router.get("/" + file.split(".")[0], (req, res) => {
     res.render("d/" + file);
   });
 });
@@ -17,8 +17,7 @@ fs.readdirSync("public/pages/d/").forEach(file => {
 module.exports.router = router;
 
 // Now when <directory /> is seen
-const replacement = () => {
-
+module.exports.replacement = () => {
   let links = fs.readFileSync("public/pages/d/links.json");
   links = JSON.parse(links);
 
@@ -41,23 +40,24 @@ const replacement = () => {
     if ("file" in link) {
       const file = link.file;
       const [fileName, fileExtension] = file.split(".");
-
       const html = fs.readFileSync("public/pages/d/" + file, "utf8");
 
+      // Title is taken from HTML <title> tag
       const tTL = { // titleTagLocation
         start: html.search("<title>") + 7,
         end: html.search("</title>")
       }
       link.title = html.substring(tTL.start, tTL.end);
 
+      // Date is taken from <meta name="date"> if it exists
       const datePos = html.search('<meta name="date"');
       const dateMetaExists = !(datePos === -1);
       if (dateMetaExists) {
         link.date = html.substring(datePos + 27, datePos + 35);
       }
 
+      // If no date then make it today
       if (!("date" in link)) {
-        // Make the date today
         const today = new Date();
         let dd = today.getDate();
         let mm = today.getMonth() + 1; 
@@ -89,6 +89,7 @@ const replacement = () => {
     link.dateText = [d, m, y].join("/");
   });
 
+  // Construct and return table
   return "<table>" + 
     links.reduce((acc, d) => {
         return acc + `
@@ -98,5 +99,3 @@ const replacement = () => {
           </tr>` }, "") + `
         </table>`;
 }
-
-module.exports.replacement = replacement;
