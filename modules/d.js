@@ -1,99 +1,102 @@
 const express = require("express");
 const fs = require("fs");
-
 const router = express.Router();
 
-let links = fs.readFileSync("public/pages/d/links.json");
-links = JSON.parse(links);
-
-fs.readdir("public/pages/d/", (err, files) => {
-  for (let file of files) {
-    const [fileName, fileExtension] = file.split(".");
-
-    if (fileExtension === "html") {
-
-      const row = {
-        url: "d/" + fileName
-      };
-
-      /* CURRENTLY WORKING ON THIS SECTION (CWOTS)
-       
-        to do
-        - clean up title finding  
-        - finish date finding
-        - add "hidden" functionality
-
-       */
-
-      fs.readFile("public/pages/d/" + file, "utf8", function(err, html) {
-        if (err) throw err;
-
-        // find title
-        const titlePos = [
-          html.search("<title>") + 7,
-          html.search("</title>") ];
-        const title = html.substring(titlePos[0], titlePos[1]);
-        row.title = title;
-      
-      });
-
-        /*
-        // find date
-        let date;
-        const datePos = html.search('<meta name="date"');
-
-        // if no date <meta> just use title
-        if (datePos === -1) {
-          date = file.substring(0, 8); }
-        else {
-          date = html.substring(datePos + 27, datePos + 35); }
-        
-        */
-      /* END CWOTS */
-
-
-      links.push(row);
-
-      // Serve each page
-      router.get(fileName, function (req, res) {
-        res.render("d/" + file);
-      });
-
-    }
-  } 
-});
-
-// Serve main d page
-router.get('/', function (req, res) {
+// Serve main page (directory)
+router.get("/", function (req, res) {
   res.render("d.html");
 });
 
-// Sort links
-links.sort(function(a, b) {
-  return b.date - a.date;
+// Serve everything in d/ file
+fs.readdirSync("public/pages/d/").forEach(file => {
+  router.get("/" + file.split(".")[0], function (req, res) {
+    res.render("d/" + file);
+  });
 });
 
-// Create dateText: from "20190602" to "6/ 2/19" etc.
-links.forEach(link => {
-  const ld = link.date;
-  const d = ld.slice(7 - (ld.charAt(6) !== "0"));
-  let m = ld.slice(5 - (ld.charAt(4) !== "0"), 6);
-  m = (" " + m).slice(-2);
-  const y = ld.slice(2, 4);
-  link.dateText = [d, m, y].join("/");
-});
+module.exports.router = router;
 
+// Now when <directory /> is seen
 const replacement = () => {
+
+  let links = fs.readFileSync("public/pages/d/links.json");
+  links = JSON.parse(links);
+
+  const urls = links.reduce((acc, link) => {
+    acc.push(link.url)
+    return acc;
+  }, []);
+
+  // Add new files that aren't in links 
+  fs.readdirSync("public/pages/d/").forEach(file => {
+    const [fileName, fileExtension] = file.split(".");
+    const tr = { url: "d/" + fileName };
+    if (fileExtension === "html" && !urls.includes(tr.url)) {
+      tr.file = file;
+      links.push(tr);
+    }
+  });
+
+  for (let link of links) {
+    if ("file" in link) {
+      const file = link.file;
+      const [fileName, fileExtension] = file.split(".");
+
+      const html = fs.readFileSync("public/pages/d/" + file, "utf8");
+
+      const tTL = { // titleTagLocation
+        start: html.search("<title>") + 7,
+        end: html.search("</title>")
+      }
+      link.title = html.substring(tTL.start, tTL.end);
+
+      const datePos = html.search('<meta name="date"');
+      const dateMetaExists = !(datePos === -1);
+      if (dateMetaExists) {
+        link.date = html.substring(datePos + 27, datePos + 35);
+      }
+
+      if (!("date" in link)) {
+        // Make the date today
+        const today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; 
+        const yyyy = today.getFullYear();
+        if (dd < 10) { dd = "0" + dd; }
+        if (mm < 10) { mm = "0" + mm; } 
+        link.date = yyyy + mm + dd;
+      }
+    }
+  }
+
+  // Sort links
+  links.sort((a, b) => b.date - a.date);
+
+  // Update links.json
+  const data = JSON.stringify(links); 
+  fs.writeFile("public/pages/d/links.json", data, "utf8", (err) => {
+    if (err) throw err;
+    console.log("The file has been saved!");
+  });
+
+  // Create dateText: from "20190602" to "6/ 2/19" etc.
+  links.forEach(link => {
+    const ld = link.date;
+    const d = ld.slice(7 - (ld.charAt(6) !== "0"));
+    let m = ld.slice(5 - (ld.charAt(4) !== "0"), 6);
+    m = (" " + m).slice(-2);
+    const y = ld.slice(2, 4);
+    link.dateText = [d, m, y].join("/");
+  });
+
   return "<table>" + 
     links.reduce((acc, d) => {
         return acc + `
-          <tr${d.hidden ? " class='hidden'" : ""}>
+          <tr${d.hidden ? ' class="hidden"' : ""}>
             <td>${d.dateText}</td>
             <td><a href=${d.url}>${d.title}</a></td>
           </tr>` }, "") + `
         </table>`;
 }
 
-// Exports
 module.exports.replacement = replacement;
-module.exports.router = router;
