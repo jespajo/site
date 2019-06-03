@@ -30,7 +30,7 @@ const replacement = () => {
   // Add new files that aren't in links 
   fs.readdirSync("public/pages/d/").forEach(file => {
     const [fileName, fileExtension] = file.split(".");
-    const tr = { url: "d/" + fileName };
+    const tr = { url: fileName };
     if (fileExtension === "html" && !urls.includes(tr.url)) {
       tr.file = file;
       links.push(tr);

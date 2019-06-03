@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="../files/icons/pencil.png" />
+  <link rel="icon" type="image/png" href="/pencil.png" />
   <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
   <title>sounds</title>
   <style>
@@ -103,7 +103,7 @@
     // add play event listener
     const playable = (element) => {
       const n = element.classList[1];
-      const src = "./src/20181225/" + n + ".mp3";
+      const src = "/20181225/" + n + ".mp3";
       const note = new Audio(src);
       note.oncanplaythrough = function() {
         element.addEventListener("click", function() {
