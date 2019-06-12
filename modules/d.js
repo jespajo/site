@@ -93,7 +93,7 @@ module.exports.replacement = () => {
         return acc + `
           <tr${d.hidden ? ' class="hidden"' : ""}>
             <td>${d.dateText}</td>
-            <td><a href=${d.url}>${d.title}</a></td>
+            <td><a href="${d.url}">${d.title}</a></td>
           </tr>` }, "") + `
     </table>`;
 }

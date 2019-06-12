@@ -11,8 +11,10 @@ A unique Express.js template engine replaces specified self-closing tags such as
 
 ### To do
 
+- Make sure that if you delete files from `links` once they stop appearing in `d/`??
+
 - Simple md to html converter. This would allow me to save markdown files in `d/` and have them rendered on a simple but nice-looking html page which then appears in the directory
 
 - Add Google Analytics (lightest option)
 
-- Add easter egg to `d` that shows the `display:none`'d table rows in the directory
+- Add easter egg to `d` that shows the `display:none` table rows in the directory
