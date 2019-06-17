@@ -1,5 +1,12 @@
 [
   {
+    "url": "d/tree",
+    "file": "tree.html",
+    "title": "my avocado tree",
+    "date": "20190614",
+    "hidden": "true"
+  },
+  {
     "url": "d/20190521",
     "file": "20190521.html",
     "title": "failure",

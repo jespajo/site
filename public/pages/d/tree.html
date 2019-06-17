@@ -1,0 +1,125 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" content="20190614">
+    <link rel="icon" type="image/png" href="/pencil.png" />
+    <title>tree (draft)</title>
+    <style>
+      * {
+        overflow: hidden;
+      }
+      body {
+        margin: 0;
+      }
+      div#container {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+      }   
+    </style>
+    <script> 
+      const init = () => {
+        const container = document.getElementById("container");
+        const canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+
+        const { offsetWidth, offsetHeight } = container;
+        canvas.style.width = offsetWidth + "px";
+        canvas.style.height = offsetHeight + "px";
+        
+        const scale = window.devicePixelRatio || 1;
+        canvas.width = offsetWidth * scale;
+        canvas.height = offsetHeight * scale;
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
+
+        // draw ground
+        const treeHeight = offsetHeight * 0.8;
+        const treeOffset = (offsetHeight - treeHeight) / 2;
+        const x0 = offsetWidth / 2; // horizontal centre of screen
+
+        // Set the fill style and draw a rectangle
+        ctx.fillStyle = "#66833E"; // dark green
+        ctx.rect(
+          0, offsetHeight - treeOffset, offsetWidth, offsetHeight + treeOffset
+        );
+        ctx.fill();
+
+        // draw trunk
+        const trunkWidth = 5;
+
+        const trunkGradient = ctx.createLinearGradient(
+          0, treeHeight + treeOffset, 0, treeOffset
+        );
+        trunkGradient.addColorStop("0", "#73613C"); // brown
+        trunkGradient.addColorStop("0.3" ,"#66833E"); // dark green
+        trunkGradient.addColorStop("1.0", "#CACCA8"); // light green
+
+        ctx.beginPath();
+        ctx.moveTo(x0, offsetHeight - treeOffset);
+        ctx.lineTo(x0, treeOffset);
+        ctx.strokeStyle = trunkGradient;
+        ctx.lineWidth = trunkWidth;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.closePath();
+
+        const rF = 30; // randomnessFactor
+
+        // draw branches
+        let branches = [];
+        const branchWidth = 3;
+        // define branch objs
+        ["left", "right"].forEach(direction => {
+          const noBranches = 4 + Math.floor(Math.random() * 3);
+          for (let i = 0; i < noBranches; i++) {
+            let curve = {};
+            if (i === 0) {
+              curve.y0 = treeOffset + 2 * treeHeight / 3 + Math.floor(Math.random() * rF);
+            } else {
+              const prevBranchY0 = branches[i - 1].y0;
+              curve.y0 = prevBranchY0
+                + (prevBranchY0 - treeOffset) / [i - noBranches]
+                + Math.floor(Math.random() * rF);
+            }
+            curve.cpx = x0 + (direction === "left"? -1 : 1)
+              * curve.y0 / 4;  // height factor (get smaller as get higher) 
+              + Math.floor(Math.random() * rF);
+            curve.cpy = curve.y0;
+            curve.x1 = curve.cpx;
+            curve.y1 = curve.y0 - 20;
+            branches.push(curve);
+          }
+        });
+        // console.log(branches);
+        branches.forEach(b => {
+          ctx.beginPath();
+          ctx.moveTo(x0, b.y0);
+          ctx.quadraticCurveTo(b.cpx, b.cpy, b.x1, b.y1);
+          ctx.lineWidth = branchWidth;
+          ctx.stroke();
+          ctx.closePath();
+        });
+      }
+      document.addEventListener("DOMContentLoaded", init);
+      window.addEventListener("resize", init);
+    </script>
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+<!--
+This is my avocado tree.
+I want it to grow big and strong like its daddy.
+Do not take my avocadoes.
+My avocado tree grows one avocado each day.
+When you take one of my avocadoes, you take it away from everybody.
+You are being selfish.
+You are selfishly taking my avocadoes.
+That's enough. Stop it.
+What are you even going to do with all those avocadoes?
+You have broken my heart.
+-->
+</html>
