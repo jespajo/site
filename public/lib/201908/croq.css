@@ -4,11 +4,12 @@ body {
   color: #0f0e0c;
 }
 
-div#container, div#text, div#paras {
+div#container, div#text,
+div#canvasBkgrd, div#paras {
   position: absolute;
 }
 
-div#container {
+div#container, div#canvasBkgrd {
   top: 0;
   right: 0;
   bottom: 20%;
@@ -101,4 +102,9 @@ a#closeExplainer, a#openExplainer {
 
 .hidden {
   display: none !important;
+}
+
+div#canvasBkgrd {
+  background-color: #7d98a1;
+  opacity: 0.2; 
 }
