@@ -35,7 +35,7 @@ const comparer = (frac) => {
   return l1 / l0 < frac;
 }
 
-const speed = 0; // lower is faster
+const speed = 12; // lower is faster
 
 let timeout;
 
