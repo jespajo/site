@@ -1,7 +1,16 @@
+@font-face {
+  font-family: "SofiaPro";
+  src: url("SofiaProRegular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "SportingGrotesqueBold";
+  src: url("SportingGrotesque-Bold.woff") format("woff");
+}
 
 body {
-  font-family: 'Roboto', sans-serif;
-  color: #0f0e0c;
+  font-family: "SofiaPro", sans-serif;
+  background-color: rgb(254, 250, 237);
 }
 
 div#container, div#text,
@@ -14,6 +23,7 @@ div#container, div#canvasBkgrd {
   right: 0;
   bottom: 20%;
   left: 0;
+  overflow: hidden;
 }
 
 div#text {
@@ -24,7 +34,7 @@ div#text {
 }
 
 div#text h1 {
-  font-family: 'Montserrat';
+  font-family: "SportingGrotesqueBold", sans-serif;
   font-size: 2.5em;
 
   position: absolute;
@@ -48,7 +58,7 @@ div#paras p {
 }
 span.firstLetter {
   float: left;
-  font-size: 2.5em;
+  font-size: 3em;
   line-height: 0.5em;
   margin: 0.25em 0.15em 0 -0.05em;
 }
@@ -62,9 +72,9 @@ span.firstLetter {
   }
 
 }
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 430px) {
   div#text h1 {
-    font-size: 2em;
+    font-size: 1.8em;
   }
 
 }
