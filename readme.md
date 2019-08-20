@@ -11,17 +11,17 @@ A unique Express template engine replaces specified self-closing tags such as `<
 
 ### To do
 
-- Make sure that if you delete files from `links` once they stop appearing in `/d/`??
+- Switch links.json into PostgreSQL database
 
 - Simple md to html converter. This would allow me to save markdown files in `/d/` and have them rendered on a simple but nice-looking html page which then appears in the directory
-
-- Add Google Analytics (lightest option)
 
 - Add easter egg to `d` that shows the `display:none` table rows in the directory
 
 
 ### New pages
 
-- My avocado tree
+- My avocado tree (in progress!)
 
-- Website update log page
+- Sketching page. A blank page with a canvas set up in a mobile friendly way with some configuration options
+  - the ability to add an image url that will load and fill the page appropriately
+  - you can shift the opacity of the image
