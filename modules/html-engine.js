@@ -12,7 +12,6 @@ const execPIs = (html) => {
   for (let tag of Object.keys(pis)) {
     const pi = "<?" + tag + ">";
     if (html.includes(pi)) {
-      console.log(tag, pis);
       html = html.replace(pi, pis[tag]);
       return execPIs(html);
     }
