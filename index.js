@@ -11,13 +11,13 @@ app.get("/", (req, res) => {
 
 // Template engine for HTML
 app.set("views", __dirname + "/public/pages/");
-const htmlEngine = require(__dirname + "/modules/html-engine");
-app.engine("html", htmlEngine.engine);
+const htmljs = require(__dirname + "/modules/html");
+app.engine("html", htmljs.engine);
 
 // /d and /d/-files
-const d = require(__dirname + "/modules/d");
-app.use("/d", d.router);
+const djs = require(__dirname + "/modules/d");
+app.use("/d", djs.router);
 
 // Serve
-const port = process.env.PORT || 4322;
+const port = process.env.PORT || 4325;
 app.listen(port, () => console.log(`Listening on ${port}`));
