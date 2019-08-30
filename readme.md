@@ -6,7 +6,7 @@ My approach is simple and DIY. The site is served by a Node.js app. I didn't use
 
 If I save files in `/public/pages/d/`, they automatically get scraped for info and linked [here](http://jespajo.com/d).
 
-A unique Express template engine replaces specified self-closing tags such as `<directory />` with blocks of html code.
+A unique Express template engine replaces PI nodes (such as `<?directory>`) with blocks of html after running specified processing instructions.
 
 
 ### To do

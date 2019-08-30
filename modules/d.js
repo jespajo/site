@@ -17,7 +17,7 @@ fs.readdirSync("public/pages/d/").forEach(file => {
 module.exports.router = router;
 
 // Now when <directory /> is seen
-module.exports.replacement = () => {
+module.exports.pi = () => {
   let links = fs.readFileSync("public/pages/d/links.json");
   links = JSON.parse(links);
 
