@@ -10,7 +10,7 @@ const pis = {
 // and replaces PI node with value returned by function
 const execPIs = (html) => {
   for (let tag of Object.keys(pis)) {
-    const pi = "<?" + tag + ">";
+    const pi = "<?" + tag + "?>";
     if (html.includes(pi)) {
       html = html.replace(pi, pis[tag]);
       return execPIs(html);

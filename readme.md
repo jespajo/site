@@ -6,7 +6,7 @@ Hello. My name is Jesse and this is my [website](http://jespajo.com/).
 
 The site is served by a Node app deployed on Heroku.
 
-A unique Express template engine ([`/modules/html.js`](https://github.com/jespajo/site/blob/master/modules/html.js)) replaces html nodes containing processing instructions (such as `<?directory>`) with blocks of html after running server-side code associated with the instruction.
+A unique Express template engine ([`/modules/html.js`](https://github.com/jespajo/site/blob/master/modules/html.js)) replaces html nodes containing processing instructions (such as `<?directory?>`) with blocks of html after running server-side code associated with the instruction.
 
 #### To do
 
