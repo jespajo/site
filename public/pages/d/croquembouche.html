@@ -3,70 +3,61 @@
 <!--
 Hello! If you're wondering how I made this:
 - I used a JavaScript library called Matter.js to render the physics simulation (http://brm.io/matter-js/).
-- A plugin to that library (https://github.com/dxu/matter-collision-events) helped with figuring out whether the pastry puff circles were on the plate (i.e. "colliding" with a square I defined).
+- A plugin for that library (https://github.com/dxu/matter-collision-events) helped with figuring out whether the pastry puff circles were on the plate (i.e. "colliding" with a rectangle I defined).
 - The typing effect I wrote myself in JavaScript.
 -->
 
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" type="image/png" href="/pencil.png" />
-  <link rel="stylesheet" type="text/css" href="/201908/croq.css">
+<link rel="icon" type="image/png" href="/pencil.png" />
+<link rel="stylesheet" type="text/css" href="/201908/croq.css">
 
-  <title>croquembouche</title>
+<title>croquembouche</title>
 
-  <meta name="date" content="20190810">
-  <meta name="description" content="In 1986, my dad quit his job at a restaurant in Sydney, took a taxi to the airport and tried to catch a flight to New Zealand. They didn't let him.">
-  <meta property="og:image" content="/201908/croquembouche.jpg" />
+<meta name="date" content="20190810">
+<meta name="description" content="In 1986, my dad quit his job at a restaurant in Sydney, took a taxi to the airport and tried to catch a flight to New Zealand. They didn't let him.">
+<meta property="og:image" content="/201908/croquembouche.jpg" />
 
-  <script src="/201908/matter.js"></script>
-  <script src="/201908/matter-collision-events.js"></script>
-  <script src="/201908/decomp.js"></script>
-  <script src="/201908/croq.js"></script>
+<script src="/201908/matter.js"></script>
+<script src="/201908/matter-collision-events.js"></script>
+<script src="/201908/decomp.js"></script>
+<script src="/201908/croq.js"></script>
 </head>
 
 <body>
-  <div id="canvasBkgrd"></div>
-  <div id="text">
-    <h1>Croquembouche</h1>
-    <div id="paras">
-      <p>
-        <span class="firstLetter">I</span><p>n 1986, my dad quit his job at a restaurant in Sydney, taxied to the airport and tried to catch a flight to New Zealand. They didn&rsquo;t let him fly. He&rsquo;d been in Australia for six months&mdash;longer than his visa allowed, they said&mdash;so he could only board a plane if it flew him home to France. He wasn&rsquo;t ready to go home. He&rsquo;d been enjoying a world tour, partly driven by a desire to put off for as long as possible his mandatory year in the French army. So he went back to the restaurant and asked if he could keep his job. The once and future kitchen hand.</p>
-      </p>
-      <p>
-        A few months later, working there, he met my mum. She was a 21-year-old Australian, three years younger than him, who had little contact with her young son and not much of a firmer grasp on reality&mdash;she&rsquo;d get clean in a few years, but at the time was addicted to speed, which sometimes made her psychotic. Once, accusing Dad of being in love with a friend, she brandished a kitchen knife. He gently tried to take it from her, and she pulled down, slicing open his hand.
-      </p>
-      <p>
-        They got married six months after they met, were together 16 years and are still good friends.
-      </p>
-      <p>
-        &ldquo;I still don&rsquo;t know why he stayed,&rdquo; Mum says when she tells me stories from the early days.
-      </p>
-      <p>
-        Love, I think. And citizenship. But mostly love.
-      </p>
-      <p>
-        &ldquo;Your father was an angel,&rdquo; she says. &ldquo;He saved me.&rdquo;
-      </p>
-      <p>
-        For their wedding, Dad&rsquo;s boss made a croquembouche. I&rsquo;ve seen the disposable-camera photos of Mum dismantling it, looking pretty in a gauzy purple dress. But the dessert could have stayed intact&mdash;nobody was hungry. Everyone was speeding.
-      </p>
-      <p>
-        When I tell these stories to a friend, I say dramatically, &ldquo;That&rsquo;s where I come from!&rdquo; And I think to myself, even more dramatically, &ldquo;That&rsquo;s where I&rsquo;ll always go back to.&rdquo;
-      </p>
-    </div>
-  </div>
-  <div id="container"></div>
-  <a href="#" id="openExplainer">?</a>
-  <div id="explainer" class="hidden">
-    <p>
-      There are ten pastry puffs and one plate on this page. Text will appear as you arrange the puffs into a croquembouche on the plate.
-    </p>
-    <a href="#" id="closeExplainer">X</a>
-  </div>
-</body>
 
+<div id="canvasBkgrd"></div>
+
+<div id="text">
+  <h1>Croquembouche</h1>
+  <div id="paras">
+    <p><span class="firstLetter">I</span><p>n 1986, my dad quit his job at a restaurant in Sydney, took a taxi to the airport and tried to catch a flight to New Zealand. They didn&rsquo;t let him. He&rsquo;d been in Australia for six months&mdash;longer than his visa allowed&mdash;so he could board a plane only if it flew him home to France.</p>
+    <p>He wasn&rsquo;t ready to go back. He&rsquo;d been enjoying a prolonged world tour, partly motivated by the desire to put off for as long as possible a mandatory year in the French army.</p>
+    <p>He went back to the restaurant and asked if he could keep his job. The once and future kitchen hand.</p>
+    <p>A few months later, working there, he met my mum, a 21-year-old Australian woman, three years younger than him. She wasn&rsquo;t doing great at the time. She had little contact with a young son (my older brother) and not much of a firmer grasp on reality itself&mdash;she&rsquo;d get clean in a few years, but for most of the &lsquo;80s was addicted to speed, which frequently gave her psychosis. Once, accusing Dad of being in love with a mutual friend, she brandished a kitchen knife. Gently, stupidly, he tried to take it from her. She pulled down, slicing open his hand.</p>
+    <p>They got married six months after they met and were together 16 years. They&rsquo;re good friends today.</p>
+    <p>&ldquo;I still don&rsquo;t know why he stayed,&rdquo; Mum says when she tells me stories from the early days.</p>
+    <p>Love, I think. And citizenship. (But mostly love.)</p>
+    <p>&ldquo;Your father was an angel,&rdquo; she says. &ldquo;He saved me.&rdquo;</p>
+    <p>For their wedding, Dad&rsquo;s boss at the restaurant made a croquembouche. I&rsquo;ve seen the disposable-camera photos of Mum dismantling it. She wore a gauzy purple dress. She looked pretty. But the dessert could have stayed intact&mdash;nobody was hungry. Speed kills your appetite, and everyone was speeding.</p>
+    <p>When I tell these stories to my boyfriend, I say dramatically, &ldquo;That&rsquo;s where I come from!&rdquo; (I think to myself, even more dramatically, &ldquo;That&rsquo;s where I&rsquo;ll always go back to.&rdquo;)</p>
+    <p>Now I&rsquo;m addicted to speed too&emdash;but it&rsquo;s okay because it&rsquo;s prescription: little orange circle Adderall pills. I wonder how they stack up.</p>
+  </div>
+</div>
+
+<div id="container"></div>
+
+<a href="#" id="openExplainer">?</a>
+
+<div id="explainer" class="hidden">
+  <p>There are ten pastry puffs and one plate on this page. Text will appear as you arrange the puffs into a croquembouche on the plate.</p>
+  <a href="#" id="closeExplainer">X</a>
+</div>
+
+</body>
 </html>
+
